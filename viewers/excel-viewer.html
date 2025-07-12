@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DocuHelp | Excel Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/main.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="header"></div>
+    <script>
+        fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);
+    </script>
+    <main class="max-w-3xl mx-auto py-12 px-4">
+        <h1 class="text-3xl font-bold text-blue-700 mb-6">Excel Viewer</h1>
+        <div class="bg-white rounded-lg shadow p-6">
+            <input type="file" accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="w-full border border-gray-300 rounded px-3 py-2 mb-4" id="excelInput">
+            <div id="excelContainer" class="border border-gray-200 rounded p-2 min-h-[200px] flex items-center justify-center text-gray-400">
+                Excel preview will appear here after upload.
+            </div>
+        </div>
+    </main>
+    <div id="footer"></div>
+    <script>
+        fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);
+        // Placeholder for Excel preview (real preview requires a JS library like SheetJS)
+        document.getElementById('excelInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const container = document.getElementById('excelContainer');
+            if (file) {
+                container.innerHTML = `<p class="text-gray-600">Preview for Excel files coming soon. Download to view full content.</p>`;
+            } else {
+                container.innerHTML = "Excel preview will appear here after upload.";
+            }
+        });
+    </script>
+</body>
+</html>

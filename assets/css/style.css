@@ -1,0 +1,64 @@
+/* DocuHelp Main Stylesheet */
+
+body {
+    font-family: 'Open Sans', 'Manrope', Arial, sans-serif;
+    background-color: #f9fafb;
+    color: #1e293b;
+}
+
+a {
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #2563eb;
+}
+
+.gradient-bg {
+    background: linear-gradient(135deg, #0540F2 0%, #3B82F6 100%);
+}
+
+.card-hover {
+    transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(5, 64, 242, 0.15);
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-blue {
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-blue:hover {
+    background: #0540f2;
+}
+
+.btn-outline {
+    border: 2px solid #2563eb;
+    color: #2563eb;
+    background: #fff;
+}
+
+.btn-outline:hover {
+    background: #2563eb;
+    color: #fff;
+}
+
+select, input, button {
+    font-family: inherit;
+}
+
+header, footer {
+    font-family: 'Roboto Slab', serif;
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Activity | DocuHelp Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/main.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="header"></div>
+  <script>
+    fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);
+  </script>
+  <main class="max-w-3xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold text-blue-700 mb-6">Recent Activity</h1>
+    <div class="bg-white rounded-lg shadow p-6">
+      <table class="w-full text-left">
+        <thead>
+          <tr>
+            <th class="py-2 px-3 border-b font-semibold">Date/Time</th>
+            <th class="py-2 px-3 border-b font-semibold">Action</th>
+            <th class="py-2 px-3 border-b font-semibold">Document</th>
+            <th class="py-2 px-3 border-b font-semibold">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="py-2 px-3 border-b">2025-07-11 09:30</td>
+            <td class="py-2 px-3 border-b">Created</td>
+            <td class="py-2 px-3 border-b">Employment Contract</td>
+            <td class="py-2 px-3 border-b text-green-600">Success</td>
+          </tr>
+          <tr>
+            <td class="py-2 px-3 border-b">2025-07-10 15:12</td>
+            <td class="py-2 px-3 border-b">Downloaded</td>
+            <td class="py-2 px-3 border-b">Company Policy</td>
+            <td class="py-2 px-3 border-b text-green-600">Success</td>
+          </tr>
+          <tr>
+            <td class="py-2 px-3 border-b">2025-07-09 18:44</td>
+            <td class="py-2 px-3 border-b">Shared</td>
+            <td class="py-2 px-3 border-b">Business Letter</td>
+            <td class="py-2 px-3 border-b text-yellow-600">Pending</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-6 text-gray-500 text-sm">
+        More detailed activity logs and filters coming soon.
+      </div>
+      <div class="mt-6">
+        <button class="btn btn-outline" onclick="window.location.href='index.html'">Back to Dashboard</button>
+      </div>
+    </div>
+  </main>
+  <div id="footer"></div>
+  <script>
+    fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);
+  </script>
+</body>
+</html>

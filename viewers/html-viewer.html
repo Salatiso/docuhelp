@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DocuHelp | HTML Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2pdf.js for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- FileSaver for TXT export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <!-- SheetJS for XLSX (Excel) export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Mammoth.js for DOCX export (import only, export is simulated) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.0.0/mammoth.browser.min.js"></script>
+    <style>
+        .fullscreen-output #editor-pane { display: none; }
+        .fullscreen-output #output-pane { width: 100% !important; }
+        .fullscreen-output #output-pane { min-width: 0 !important; }
+    </style>
+</head>
+<body class="bg-slate-100">
+    <div id="header"></div>
+    <script>
+        fetch('../components/header.html')
+            .then(r => r.text())
+            .then(t => document.getElementById('header').innerHTML = t);
+    </script>
+    <main class="max-w-6xl mx-auto py-8 px-2">
+        <h1 class="text-3xl font-bold text-blue-700 mb-6">HTML Viewer</h1>
+        <div class="bg-white rounded-lg shadow p-4">
+            <!-- Toolbar -->
+            <div class="flex flex-wrap gap-2 mb-3">
+                <input type="file" accept=".html,.txt,.docx,.xlsx" class="border rounded px-2 py-1" id="fileInput">
+                <input type="text" id="urlInput" placeholder="Paste website URL..." class="border rounded px-2 py-1 w-64">
+                <button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700" id="fetchUrlBtn">Fetch URL</button>
+                <button class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700" id="importPasteBtn">Paste</button>
+                <button class="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700" id="clearBtn">Clear</button>
+                <div class="flex-1"></div>
+                <button class="bg-slate-600 text-white px-3 py-1 rounded hover:bg-slate-700" id="toggleViewBtn">🔳 Side-by-side</button>
+                <div class="relative group">
+                    <button class="bg-indigo-700 text-white px-3 py-1 rounded hover:bg-indigo-800">Export ▼</button>
+                    <div class="absolute hidden group-hover:block bg-white shadow rounded mt-1 z-10">
+                        <button class="block w-full text-left px-4 py-2 hover:bg-indigo-50" id="exportHtmlBtn">HTML</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-indigo-50" id="exportTxtBtn">TXT</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-indigo-50" id="exportPdfBtn">PDF</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-indigo-50" id="exportDocxBtn">Word</button>
+                        <button class="block w-full text-left px-4 py-2 hover:bg-indigo-50" id="exportXlsxBtn">Excel</button>
+                    </div>
+                </div>
+                <button class="bg-pink-600 text-white px-3 py-1 rounded hover:bg-pink-700" id="shareBtn">Share</button>
+            </div>
+            <!-- Main Panes -->
+            <div id="main-panes" class="flex flex-col md:flex-row gap-2">
+                <!-- Editor Pane -->
+                <div id="editor-pane" class="flex-1 min-w-[320px]">
+                    <label class="block font-semibold mb-1 text-slate-700">HTML / Code Input</label>
+                    <textarea id="codeEditor" class="w-full h-[400px] border rounded px-2 py-2 font-mono text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-200" spellcheck="false"></textarea>
+                </div>
+                <!-- Output Pane -->
+                <div id="output-pane" class="flex-1 min-w-[320px] bg-gray-50 border rounded p-2 relative">
+                    <label class="block font-semibold mb-1 text-slate-700">Live Output</label>
+                    <iframe id="liveOutput" class="w-full h-[400px] bg-white border rounded" sandbox="allow-same-origin allow-modals allow-forms allow-popups"></iframe>
+                    <div id="outputOverlay" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 text-slate-400 text-lg">No output yet.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="footer"></div>
+    <script>
+        // Load footer
+        fetch('../components/footer.html')
+            .then(r => r.text())
+            .then(t => document.getElementById('footer').innerHTML = t);
+
+        // Elements
+        const codeEditor = document.getElementById('codeEditor');
+        const liveOutput = document.getElementById('liveOutput');
+        const outputOverlay = document.getElementById('outputOverlay');
+        const fileInput = document.getElementById('fileInput');
+        const urlInput = document.getElementById('urlInput');
+        const fetchUrlBtn = document.getElementById('fetchUrlBtn');
+        const importPasteBtn = document.getElementById('importPasteBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const toggleViewBtn = document.getElementById('toggleViewBtn');
+        const exportHtmlBtn = document.getElementById('exportHtmlBtn');
+        const exportTxtBtn = document.getElementById('exportTxtBtn');
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+        const exportDocxBtn = document.getElementById('exportDocxBtn');
+        const exportXlsxBtn = document.getElementById('exportXlsxBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const mainPanes = document.getElementById('main-panes');
+        const editorPane = document.getElementById('editor-pane');
+        const outputPane = document.getElementById('output-pane');
+        let isSideBySide = true;
+
+        // Live update output
+        function updateOutput() {
+            const code = codeEditor.value;
+            liveOutput.srcdoc = code || "<div style='color:#aaa;text-align:center;margin-top:2em;'>No HTML to render.</div>";
+        }
+        codeEditor.addEventListener('input', updateOutput);
+
+        // File import
+        fileInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'html' || ext === 'txt') {
+                const reader = new FileReader();
+                reader.onload = evt => {
+                    codeEditor.value = evt.target.result;
+                    updateOutput();
+                };
+                reader.readAsText(file);
+            } else if (ext === 'docx') {
+                // Use Mammoth.js to convert DOCX to HTML
+                const reader = new FileReader();
+                reader.onload = async evt => {
+                    const arrayBuffer = evt.target.result;
+                    mammoth.convertToHtml({arrayBuffer}).then(result => {
+                        codeEditor.value = result.value;
+                        updateOutput();
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+            } else if (ext === 'xlsx') {
+                // Use SheetJS to convert XLSX to HTML table
+                const reader = new FileReader();
+                reader.onload = evt => {
+                    const data = evt.target.result;
+                    const workbook = XLSX.read(data, {type: 'binary'});
+                    let html = '';
+                    workbook.SheetNames.forEach(name => {
+                        const ws = workbook.Sheets[name];
+                        html += XLSX.utils.sheet_to_html(ws);
+                    });
+                    codeEditor.value = html;
+                    updateOutput();
+                };
+                reader.readAsBinaryString(file);
+            } else {
+                alert("Unsupported file type.");
+            }
+        });
+
+        // Paste import
+        importPasteBtn.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                codeEditor.value = text;
+                updateOutput();
+            } catch (err) {
+                alert("Could not read clipboard. Please allow clipboard permissions.");
+            }
+        });
+
+        // Fetch from URL
+        fetchUrlBtn.addEventListener('click', async () => {
+            const url = urlInput.value.trim();
+            if (!url) return alert("Please enter a URL.");
+            try {
+                // Try fetch directly (works only for CORS-enabled sites)
+                let html = '';
+                try {
+                    const resp = await fetch(url);
+                    html = await resp.text();
+                } catch {
+                    // Optionally, use a public CORS proxy for demo purposes (not for production)
+                    const proxy = "https://corsproxy.io/?";
+                    const resp = await fetch(proxy + encodeURIComponent(url));
+                    html = await resp.text();
+                }
+                codeEditor.value = html;
+                updateOutput();
+            } catch (err) {
+                alert("Failed to fetch HTML from the URL.");
+            }
+        });
+
+        // Clear editor
+        clearBtn.addEventListener('click', () => {
+            codeEditor.value = '';
+            updateOutput();
+        });
+
+        // Toggle side-by-side / fullscreen output
+        toggleViewBtn.addEventListener('click', () => {
+            isSideBySide = !isSideBySide;
+            if (isSideBySide) {
+                mainPanes.classList.remove('fullscreen-output');
+                toggleViewBtn.textContent = '🔳 Side-by-side';
+                editorPane.style.display = '';
+                outputPane.style.width = '';
+            } else {
+                mainPanes.classList.add('fullscreen-output');
+                toggleViewBtn.textContent = '🗖 Full Output';
+                editorPane.style.display = 'none';
+                outputPane.style.width = '100%';
+            }
+        });
+
+        // Export HTML
+        exportHtmlBtn.addEventListener('click', () => {
+            const blob = new Blob([codeEditor.value], {type: "text/html"});
+            saveAs(blob, "document.html");
+        });
+
+        // Export TXT
+        exportTxtBtn.addEventListener('click', () => {
+            const blob = new Blob([codeEditor.value], {type: "text/plain"});
+            saveAs(blob, "document.txt");
+        });
+
+        // Export PDF
+        exportPdfBtn.addEventListener('click', () => {
+            const iframe = liveOutput;
+            iframe.contentWindow.focus();
+            html2pdf().from(iframe).set({filename: 'document.pdf'}).save();
+        });
+
+        // Export DOCX (simulate by saving HTML as .docx, for real conversion use backend or advanced libs)
+        exportDocxBtn.addEventListener('click', () => {
+            // Simulate: Save as HTML with .docx extension
+            const blob = new Blob([codeEditor.value], {type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+            saveAs(blob, "document.docx");
+        });
+
+        // Export XLSX (simulate by saving HTML as .xlsx, for real conversion use backend or advanced libs)
+        exportXlsxBtn.addEventListener('click', () => {
+            // Simulate: Save as HTML with .xlsx extension
+            const blob = new Blob([codeEditor.value], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+            saveAs(blob, "document.xlsx");
+        });
+
+        // Share (copy code to clipboard, or implement link sharing with backend)
+        shareBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(codeEditor.value);
+                alert("Code copied to clipboard! (For link sharing, integrate with backend.)");
+            } catch {
+                alert("Failed to copy to clipboard.");
+            }
+        });
+
+        // Initial output
+        updateOutput();
+    </script>
+</body>
+</html>

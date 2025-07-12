@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DocuHelp | Presentation Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/main.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="header"></div>
+    <script>
+        fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);
+    </script>
+    <main class="max-w-3xl mx-auto py-12 px-4">
+        <h1 class="text-3xl font-bold text-blue-700 mb-6">Presentation Maker</h1>
+        <div class="bg-white rounded-lg shadow p-6 space-y-6">
+            <div id="slides" class="space-y-8">
+                <div class="slide bg-blue-50 rounded p-4">
+                    <label class="block font-semibold mb-1">Slide Title</label>
+                    <input type="text" class="w-full border border-gray-300 rounded px-3 py-2 mb-2" placeholder="Title">
+                    <label class="block font-semibold mb-1">Slide Content</label>
+                    <textarea class="w-full border border-gray-300 rounded px-3 py-2" rows="3" placeholder="Content"></textarea>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button type="button" class="btn btn-blue" onclick="addSlide()">Add Slide</button>
+                <button type="button" class="btn btn-outline" onclick="downloadSlides()">Download as HTML</button>
+            </div>
+        </div>
+    </main>
+    <div id="footer"></div>
+    <script>
+        fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);
+
+        function addSlide() {
+            const slides = document.getElementById('slides');
+            const slide = document.createElement('div');
+            slide.className = 'slide bg-blue-50 rounded p-4 mt-4';
+            slide.innerHTML = `
+                <label class="block font-semibold mb-1">Slide Title</label>
+                <input type="text" class="w-full border border-gray-300 rounded px-3 py-2 mb-2" placeholder="Title">
+                <label class="block font-semibold mb-1">Slide Content</label>
+                <textarea class="w-full border border-gray-300 rounded px-3 py-2" rows="3" placeholder="Content"></textarea>
+            `;
+            slides.appendChild(slide);
+        }
+
+        function downloadSlides() {
+            const slides = document.querySelectorAll('.slide');
+            let html = '<!DOCTYPE html><html><head><title>DocuHelp Presentation</title></head><body>';
+            slides.forEach((slide, idx) => {
+                const title = slide.querySelector('input').value;
+                const content = slide.querySelector('textarea').value;
+                html += `<section style="margin-bottom:40px;"><h2>${title}</h2><p>${content}</p></section>`;
+            });
+            html += '</body></html>';
+            const blob = new Blob([html], {type: 'text/html'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'DocuHelp_Presentation.html';
+            a.click();
+        }
+    </script>
+</body>
+</html>

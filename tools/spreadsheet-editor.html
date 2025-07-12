@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DocuHelp | Spreadsheet Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/main.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS for spreadsheet editing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div id="header"></div>
+    <script>
+        fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);
+    </script>
+    <main class="max-w-4xl mx-auto py-12 px-4">
+        <h1 class="text-3xl font-bold text-blue-700 mb-6">Spreadsheet Editor</h1>
+        <div class="bg-white rounded-lg shadow p-6 space-y-6">
+            <div>
+                <label class="block font-semibold mb-2" for="sheetFile">Upload Excel File (.xlsx)</label>
+                <input type="file" id="sheetFile" accept=".xlsx,.xls" class="w-full border border-gray-300 rounded px-3 py-2">
+            </div>
+            <div>
+                <button class="btn btn-blue" onclick="downloadSheet()">Download as Excel</button>
+            </div>
+            <div class="overflow-auto mt-6">
+                <table id="sheetTable" class="min-w-full border text-sm"></table>
+            </div>
+        </div>
+    </main>
+    <div id="footer"></div>
+    <script>
+        fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);
+
+        let workbook, sheetName;
+        document.getElementById('sheetFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                workbook = XLSX.read(evt.target.result, {type: 'binary'});
+                sheetName = workbook.SheetNames[0];
+                const html = XLSX.utils.sheet_to_html(workbook.Sheets[sheetName]);
+                document.getElementById('sheetTable').outerHTML = html;
+            };
+            reader.readAsBinaryString(file);
+        });
+
+        function downloadSheet() {
+            if (!workbook) return alert('Please upload and edit a spreadsheet first.');
+            XLSX.writeFile(workbook, 'DocuHelp_Spreadsheet.xlsx');
+        }
+    </script>
+</body>
+</html>

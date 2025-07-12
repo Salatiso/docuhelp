@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DocuHelp Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/main.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="header"></div>
+  <script>fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);</script>
+  <main class="max-w-5xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold text-blue-700 mb-6">Welcome to Your DocuHelp Dashboard</h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="font-semibold text-lg mb-2">My Documents</h2>
+        <p class="text-gray-600 mb-4">View and manage all your uploaded and created documents.</p>
+        <a href="../modules/viewers.html" class="btn btn-blue">Open Viewer</a>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="font-semibold text-lg mb-2">Templates</h2>
+        <p class="text-gray-600 mb-4">Browse and use professional document templates.</p>
+        <a href="../modules/templates.html" class="btn btn-blue">Browse Templates</a>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="font-semibold text-lg mb-2">Account Settings</h2>
+        <p class="text-gray-600 mb-4">Manage your profile, security, and preferences.</p>
+        <a href="profile.html" class="btn btn-blue">Profile</a>
+      </div>
+    </div>
+    <div class="mt-10">
+      <h2 class="text-xl font-semibold mb-2">Recent Activity</h2>
+      <p class="text-gray-500">Your recent document actions will appear here.</p>
+    </div>
+  </main>
+  <div id="footer"></div>
+  <script>fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);</script>
+</body>
+</html>

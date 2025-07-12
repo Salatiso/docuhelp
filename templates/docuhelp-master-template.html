@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DocuHelp Document Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .a4 { width: 210mm; min-height: 297mm; margin: 1rem auto; background: #fff; box-shadow: 0 0 8px #ccc; }
+        @media print {
+            .no-print { display: none !important; }
+            .a4 { box-shadow: none; margin: 0; }
+        }
+        .watermark {
+            position: absolute; opacity: 0.06; left: 50%; top: 50%; transform: translate(-50%,-50%);
+            font-size: 7rem; font-weight: bold; color: #0540F2; pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Controls -->
+    <div class="no-print flex justify-between items-center max-w-3xl mx-auto mt-4 mb-2">
+        <div>
+            <button onclick="restorePages()" class="bg-blue-600 text-white px-3 py-1 rounded mr-2">Restore Pages</button>
+            <button onclick="window.print()" class="bg-gray-700 text-white px-3 py-1 rounded">Print</button>
+        </div>
+        <div>
+            <label for="lang" class="mr-2">Language:</label>
+            <select id="lang" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                <option value="en">English</option>
+                <option value="xh">isiXhosa</option>
+                <option value="zu">isiZulu</option>
+                <option value="af">Afrikaans</option>
+                <option value="st">Sesotho</option>
+                <option value="nso">Sepedi</option>
+                <option value="ts">Xitsonga</option>
+                <option value="ve">Tshivenḓa</option>
+                <option value="tn">Setswana</option>
+                <option value="ss">siSwati</option>
+                <option value="nr">isiNdebele</option>
+                <option value="sw">Kiswahili</option>
+                <option value="pt">Português</option>
+                <option value="fr">Français</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Pages Wrapper -->
+    <div id="pages" class="relative">
+        <!-- Cover Page -->
+        <section class="a4 relative flex flex-col items-center justify-center p-12 mb-8 bg-blue-50" id="cover-page">
+            <div class="watermark">DocuHelp</div>
+            <div class="mb-6">
+                <svg class="h-16 w-16 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+                    <path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/>
+                    <rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/>
+                    <rect x="30" y="45" width="35" height="3" fill="white" rx="1"/>
+                    <rect x="30" y="52" width="35" height="2" fill="white" rx="1"/>
+                    <rect x="30" y="57" width="25" height="2" fill="white" rx="1"/>
+                </svg>
+            </div>
+            <h1 contenteditable="true" data-bind="docTitle" class="text-4xl font-roboto-slab font-bold text-blue-900 mb-2">[Document Title]</h1>
+            <h2 contenteditable="true" data-bind="docSubtitle" class="text-xl text-blue-700 mb-6">[Document Subtitle]</h2>
+            <div class="w-full max-w-md bg-white rounded-lg shadow p-4 mb-4">
+                <h3 class="font-semibold mb-2">Document Details</h3>
+                <div id="doc-details">
+                    <div class="flex mb-2">
+                        <span contenteditable="true" data-bind="companyName" class="font-semibold mr-2">[Company Name]</span>
+                        <span class="text-gray-500">|</span>
+                        <span contenteditable="true" data-bind="date" class="ml-2">[Date]</span>
+                    </div>
+                </div>
+                <button class="no-print text-sm text-blue-600 hover:underline mt-2" onclick="addDetail()">+ Add Custom Field</button>
+            </div>
+            <div class="absolute bottom-8 left-8 text-xs text-gray-400">
+                <span data-bind="docID">DocID: DOCUHELP-PP-20250711</span>
+                <span class="mx-2">|</span>
+                <span data-bind="version">Version 1.0</span>
+            </div>
+        </section>
+
+        <!-- Introduction Page -->
+        <section class="a4 relative p-12 mb-8 bg-white" id="intro-page">
+            <div class="watermark">DocuHelp</div>
+            <h2 contenteditable="true" data-bind="introHeading" class="text-2xl font-roboto-slab font-bold mb-4">Introduction</h2>
+            <p contenteditable="true" data-bind="introText" class="text-lg mb-4">[Insert a brief introduction about the document, its purpose, and legal context here.]</p>
+            <button class="no-print text-sm text-blue-600 hover:underline mt-2" onclick="hidePage('intro-page')">Hide This Page</button>
+        </section>
+
+        <!-- Table of Contents Page -->
+        <section class="a4 relative p-12 mb-8 bg-white" id="toc-page">
+            <div class="watermark">DocuHelp</div>
+            <h2 class="text-2xl font-roboto-slab font-bold mb-4">Table of Contents</h2>
+            <ol id="toc-list" class="list-decimal pl-6 text-lg"></ol>
+            <button class="no-print text-sm text-blue-600 hover:underline mt-2" onclick="hidePage('toc-page')">Hide This Page</button>
+        </section>
+
+        <!-- Main Content Page -->
+        <section class="a4 relative p-12 mb-8 bg-white" id="main-content-page">
+            <div class="watermark">DocuHelp</div>
+            <h2 contenteditable="true" data-bind="mainHeading" class="text-2xl font-roboto-slab font-bold mb-4">Main Content</h2>
+            <div id="main-content" class="space-y-6">
+                <h2 contenteditable="true" class="text-xl font-bold mb-2">Section 1</h2>
+                <p contenteditable="true" class="mb-4">[Section 1 content goes here...]</p>
+                <h2 contenteditable="true" class="text-xl font-bold mb-2">Section 2</h2>
+                <p contenteditable="true" class="mb-4">[Section 2 content goes here...]</p>
+            </div>
+        </section>
+
+        <!-- Sign-off Page -->
+        <section class="a4 relative p-12 mb-8 bg-white" id="signoff-page">
+            <div class="watermark">DocuHelp</div>
+            <h2 contenteditable="true" data-bind="signoffHeading" class="text-2xl font-roboto-slab font-bold mb-4">Sign-off</h2>
+            <div class="grid grid-cols-2 gap-8 mt-8">
+                <div>
+                    <label class="block mb-2 font-semibold">Signature:</label>
+                    <div class="border-b-2 border-gray-300 h-10"></div>
+                    <label class="block mt-4 mb-2 font-semibold">Name:</label>
+                    <div contenteditable="true" class="border-b-2 border-gray-300 h-8"></div>
+                </div>
+                <div>
+                    <label class="block mb-2 font-semibold">Date:</label>
+                    <div contenteditable="true" class="border-b-2 border-gray-300 h-10"></div>
+                    <label class="block mt-4 mb-2 font-semibold">Witness:</label>
+                    <div contenteditable="true" class="border-b-2 border-gray-300 h-8"></div>
+                </div>
+            </div>
+            <button class="no-print text-sm text-blue-600 hover:underline mt-8" onclick="hidePage('signoff-page')">Hide This Page</button>
+        </section>
+
+        <!-- Back Cover Page -->
+        <section class="a4 relative flex flex-col items-center justify-center p-12 mb-8 bg-blue-50" id="back-cover-page">
+            <div class="watermark">DocuHelp</div>
+            <div class="mb-6">
+                <svg class="h-16 w-16 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+                    <path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/>
+                    <rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/>
+                    <rect x="30" y="45" width="35" height="3" fill="white" rx="1"/>
+                    <rect x="30" y="52" width="35" height="2" fill="white" rx="1"/>
+                    <rect x="30" y="57" width="25" height="2" fill="white" rx="1"/>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-blue-900 mb-2">DocuHelp: Empowering Your Documentation</h2>
+            <p class="text-lg text-blue-700 mb-6">Part of an integrated ecosystem for compliance, learning, and empowerment.</p>
+            <div class="w-full max-w-lg bg-white rounded-lg shadow p-6">
+                <h3 class="font-semibold mb-2">Builder's Ethos</h3>
+                <ul class="list-disc pl-6 text-gray-700 text-base">
+                    <li>STRUCTURE: 🛡️ We build organised, logical, and robust systems.</li>
+                    <li>ASSEMBLE: 🧩 We bring together disparate parts to create a cohesive whole.</li>
+                    <li>LEGACY: 🦅 We build upon the work of our predecessors.</li>
+                    <li>ARCHITECT: 🏛️ We design with vision and purpose for the future.</li>
+                    <li>TOOL-UP: 🛠️ We empower users with the right tools and knowledge.</li>
+                    <li>INNOVATE: 💡 We constantly seek better ways to solve problems.</li>
+                    <li>SUSTAIN: 🌱 We build things that are meant to last.</li>
+                    <li>OBSERVE: 👁️ We pay close attention to identify needs and find solutions.</li>
+                </ul>
+            </div>
+            <div class="absolute bottom-8 left-8 text-xs text-gray-400">
+                <span>https://salatiso.com/docuhelp/ &bull; support@salatiso.com</span>
+            </div>
+        </section>
+    </div>
+
+    <!-- Page Numbering -->
+    <div class="no-print fixed bottom-4 right-8 bg-white bg-opacity-80 rounded px-4 py-2 shadow text-sm text-gray-700" id="page-numbers"></div>
+
+    <!-- JavaScript for interactivity -->
+    <script>
+        // Data-binding logic
+        document.querySelectorAll('[contenteditable][data-bind]').forEach(el => {
+            el.addEventListener('input', function() {
+                let key = el.getAttribute('data-bind');
+                document.querySelectorAll('[data-bind="' + key + '"]').forEach(other => {
+                    if (other !== el) other.innerText = el.innerText;
+                });
+            });
+        });
+
+        // Dynamic Table of Contents
+        function updateTOC() {
+            const toc = document.getElementById('toc-list');
+            toc.innerHTML = '';
+            const mainContent = document.getElementById('main-content');
+            if (!mainContent) return;
+            mainContent.querySelectorAll('h2').forEach((h2, idx) => {
+                const text = h2.innerText || h2.textContent;
+                const id = 'section-' + idx;
+                h2.id = id;
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#' + id;
+                a.innerText = text;
+                a.className = 'text-blue-700 hover:underline';
+                li.appendChild(a);
+                toc.appendChild(li);
+            });
+        }
+        updateTOC();
+        document.getElementById('main-content').addEventListener('input', updateTOC);
+
+        // Add/Remove Custom Fields
+        function addDetail() {
+            const div = document.createElement('div');
+            div.className = 'flex mb-2';
+            div.innerHTML = `<span contenteditable="true" class="font-semibold mr-2" data-bind="custom${Date.now()}">[Custom Field]</span>
+                <button class="no-print text-xs text-red-600 hover:underline ml-2" onclick="this.parentElement.remove()">Remove</button>`;
+            document.getElementById('doc-details').appendChild(div);
+        }
+        window.addDetail = addDetail;
+
+        // Hide/Restore Pages
+        function hidePage(id) {
+            document.getElementById(id).style.display = 'none';
+            updatePageNumbers();
+        }
+        function restorePages() {
+            ['intro-page','toc-page','signoff-page'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = '';
+            });
+            updatePageNumbers();
+        }
+        window.hidePage = hidePage;
+        window.restorePages = restorePages;
+
+        // Page Numbering
+        function updatePageNumbers() {
+            const pages = Array.from(document.querySelectorAll('.a4')).filter(p => p.style.display !== 'none');
+            pages.forEach((page, idx) => {
+                let num = page.querySelector('.page-num');
+                if (!num) {
+                    num = document.createElement('div');
+                    num.className = 'page-num absolute bottom-4 right-8 text-xs text-gray-400';
+                    page.appendChild(num);
+                }
+                num.innerText = `Page ${idx+1} of ${pages.length}`;
+            });
+            document.getElementById('page-numbers').innerText = `Total Pages: ${pages.length}`;
+        }
+        updatePageNumbers();
+        window.addEventListener('load', updatePageNumbers);
+        window.addEventListener('resize', updatePageNumbers);
+
+        // Recompute page numbers on page hide/restore
+        document.querySelectorAll('.no-print button').forEach(btn => {
+            btn.addEventListener('click', updatePageNumbers);
+        });
+    </script>
+</body>
+</html>

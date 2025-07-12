@@ -1,0 +1,94 @@
+<!-- header.html -->
+<header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <!-- SVG logo as before -->
+                    <svg class="text-blue-600 h-10 w-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+                        <!-- ... SVG paths ... -->
+                        <path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/>
+                        <rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/>
+                        <rect x="30" y="45" width="35" height="3" fill="white" rx="1"/>
+                        <rect x="30" y="52" width="35" height="2" fill="white" rx="1"/>
+                        <rect x="30" y="57" width="25" height="2" fill="white" rx="1"/>
+                        <rect x="20" y="35" width="45" height="28" fill="#60A5FA" stroke="#2563EB" stroke-width="1" rx="2"/>
+                        <rect x="25" y="40" width="35" height="3" fill="white" rx="1"/>
+                        <rect x="25" y="47" width="35" height="2" fill="white" rx="1"/>
+                        <rect x="25" y="52" width="25" height="2" fill="white" rx="1"/>
+                        <circle cx="75" cy="20" r="6" fill="#FCD34D" stroke="#F59E0B" stroke-width="1"/>
+                        <rect x="72" y="17" width="6" height="6" fill="white" rx="1"/>
+                        <rect x="73" y="18" width="4" height="1" fill="#F59E0B"/>
+                    </svg>
+                </div>
+                <a href="index.html" class="text-3xl font-bold font-roboto-slab text-gray-900">
+                    <span class="text-gray-900">Docu</span><span class="text-blue-600">Help</span>
+                </a>
+            </div>
+            <!-- Navigation -->
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#features" class="text-gray-600 hover:text-blue-600 font-medium">Features</a>
+                <!-- Tool Hub Dropdown -->
+                <div class="relative group">
+                    <button class="text-gray-600 hover:text-blue-600 font-medium focus:outline-none flex items-center gap-1">
+                        Tool Hub
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="absolute left-0 mt-2 w-56 bg-white rounded shadow-lg z-20 hidden group-hover:block" id="tool-dropdown">
+                        <div class="py-2" id="tool-dropdown-list">
+                            <!-- Dynamically filled -->
+                            <div class="px-4 py-2 text-gray-400 text-sm">Loading tools...</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="document-hub.html" class="text-gray-600 hover:text-blue-600 font-medium">Document Hub</a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-600 font-medium">Contact</a>
+            </nav>
+            <!-- Language Selector & Actions -->
+            <div class="flex items-center gap-4">
+                <select id="lang" class="border border-gray-300 rounded px-2 py-1 text-sm">
+                    <option value="en">English</option>
+                    <option value="xh">isiXhosa</option>
+                    <option value="zu">isiZulu</option>
+                    <option value="af">Afrikaans</option>
+                    <option value="st">Sesotho</option>
+                    <option value="nso">Sepedi</option>
+                    <option value="ts">Xitsonga</option>
+                    <option value="ve">Tshivenḓa</option>
+                    <option value="tn">Setswana</option>
+                    <option value="ss">siSwati</option>
+                    <option value="nr">isiNdebele</option>
+                    <option value="sw">Kiswahili</option>
+                    <option value="pt">Português</option>
+                    <option value="fr">Français</option>
+                </select>
+                <a href="login.html" class="text-blue-600 hover:text-blue-800 font-medium">Sign In</a>
+                <a href="#register" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">Get Started</a>
+            </div>
+        </div>
+    </div>
+    <!-- Mobile Navigation can be added here if needed -->
+    <script>
+    // Dynamically populate Tool Hub dropdown from tools-list.json
+    fetch('tools/tools-list.json')
+        .then(r => r.json())
+        .then(tools => {
+            const list = document.getElementById('tool-dropdown-list');
+            if (!tools.length) {
+                list.innerHTML = '<div class="px-4 py-2 text-gray-400 text-sm">No tools available.</div>';
+                return;
+            }
+            list.innerHTML = '';
+            tools.forEach(tool => {
+                const a = document.createElement('a');
+                a.href = tool.link;
+                a.className = "block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 text-sm transition";
+                a.textContent = tool.name;
+                list.appendChild(a);
+            });
+        });
+    </script>
+</header>

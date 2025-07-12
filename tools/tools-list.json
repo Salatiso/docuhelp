@@ -1,0 +1,7 @@
+[
+    { "name": "HTML Viewer", "link": "/DocuHelp/tools/html-viewer.html" },
+    { "name": "PDF Converter", "link": "/DocuHelp/tools/pdf-converter.html" },
+    { "name": "Text Analyzer", "link": "/DocuHelp/tools/text-analyzer.html" },
+    { "name": "Markdown Previewer", "link": "/DocuHelp/tools/markdown-previewer.html" }
+    // Add more tools as needed
+]

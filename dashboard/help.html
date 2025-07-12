@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Help | DocuHelp Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/main.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="header"></div>
+  <script>
+    fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);
+  </script>
+  <main class="max-w-3xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-bold text-blue-700 mb-6">Help & FAQ</h1>
+    <div class="bg-white rounded-lg shadow p-6 space-y-4">
+      <h2 class="font-semibold text-lg">Frequently Asked Questions</h2>
+      <div>
+        <h3 class="font-semibold">How do I create a new document?</h3>
+        <p>Go to the Templates section, select a template, and start editing. You can save or download your document.</p>
+      </div>
+      <div>
+        <h3 class="font-semibold">How do I upgrade my account?</h3>
+        <p>From your Profile or Settings, choose "Upgrade" and follow the subscription instructions.</p>
+      </div>
+      <div>
+        <h3 class="font-semibold">How secure is my data?</h3>
+        <p>All documents are stored securely and encrypted for subscribed users. See our <a href="../privacy.html" class="text-blue-600 underline">Privacy Policy</a> for details.</p>
+      </div>
+      <div>
+        <h3 class="font-semibold">Where can I get more help?</h3>
+        <p>Contact support via the <a href="support.html" class="text-blue-600 underline">Support page</a> or email us directly.</p>
+      </div>
+    </div>
+  </main>
+  <div id="footer"></div>
+  <script>
+    fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);
+  </script>
+</body>
+</html>

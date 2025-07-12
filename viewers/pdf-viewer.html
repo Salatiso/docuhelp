@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DocuHelp | PDF Viewer & Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="../assets/js/main.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js"></script>
+    <!-- Mammoth.js for Word to PDF/HTML -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.0.7/mammoth.browser.min.js"></script>
+    <!-- SheetJS for Excel to PDF/HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- html2pdf.js for HTML/Text to PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .pdf-viewer-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .pdf-viewer-toolbar button {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .pdf-viewer-toolbar button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+        .pdf-viewer-toolbar button:hover:not(:disabled) {
+            background: #0540f2;
+        }
+        .pdf-page-num {
+            font-weight: 500;
+            color: #2563eb;
+        }
+        .tab-btn.active {
+            background: #2563eb;
+            color: #fff;
+        }
+        .tab-btn {
+            background: #f3f4f6;
+            color: #2563eb;
+            border: none;
+            border-radius: 0.375rem 0.375rem 0 0;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+    <script>
+        fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);
+    </script>
+    <main class="max-w-4xl mx-auto py-12 px-4">
+        <h1 class="text-3xl font-bold text-blue-700 mb-6">PDF Viewer & Converter</h1>
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <div class="flex gap-2 mb-4">
+                <button class="tab-btn active" id="tab-pdf">PDF Viewer</button>
+                <button class="tab-btn" id="tab-convert">Convert to PDF</button>
+            </div>
+            <!-- PDF Viewer Tab -->
+            <div id="pdf-viewer-tab">
+                <input type="file" accept="application/pdf" class="w-full border border-gray-300 rounded px-3 py-2 mb-4" id="pdfInput">
+                <div class="pdf-viewer-toolbar" id="pdfToolbar" style="display:none;">
+                    <button id="prevPage" disabled>&larr; Prev</button>
+                    <span class="pdf-page-num" id="pageInfo">Page 1</span>
+                    <button id="nextPage" disabled>Next &rarr;</button>
+                    <span class="ml-auto text-gray-500 text-sm" id="pdfName"></span>
+                    <button id="downloadPDF" class="ml-4">Download PDF</button>
+                </div>
+                <div id="pdfContainer" class="border border-gray-200 rounded p-2 min-h-[400px] flex items-center justify-center text-gray-400 bg-gray-50">
+                    PDF preview will appear here after upload.
+                </div>
+            </div>
+            <!-- Converter Tab -->
+            <div id="convert-tab" style="display:none;">
+                <div class="mb-4">
+                    <label class="block font-semibold mb-2">Paste Text or HTML</label>
+                    <textarea id="pasteInput" rows="6" class="w-full border border-gray-300 rounded px-3 py-2 mb-2" placeholder="Paste your text or HTML here..."></textarea>
+                    <div class="flex gap-2">
+                        <button id="convertPastePDF" class="btn btn-blue">Convert to PDF</button>
+                        <button id="convertPasteWord" class="btn btn-outline">Convert to Word</button>
+                        <button id="convertPasteHTML" class="btn btn-outline">Convert to HTML</button>
+                        <button id="convertPasteTXT" class="btn btn-outline">Convert to TXT</button>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block font-semibold mb-2">Upload Document (Word, Excel, PowerPoint, HTML, TXT, PDF)</label>
+                    <input type="file" id="convertFileInput" class="w-full border border-gray-300 rounded px-3 py-2 mb-2" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.html,.htm">
+                    <div class="flex gap-2">
+                        <button id="convertFilePDF" class="btn btn-blue">Convert to PDF</button>
+                        <button id="convertFileWord" class="btn btn-outline">Convert to Word</button>
+                        <button id="convertFileExcel" class="btn btn-outline">Convert to Excel</button>
+                        <button id="convertFileHTML" class="btn btn-outline">Convert to HTML</button>
+                        <button id="convertFileTXT" class="btn btn-outline">Convert to TXT</button>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block font-semibold mb-2">Import from URL</label>
+                    <input type="url" id="convertUrlInput" class="w-full border border-gray-300 rounded px-3 py-2 mb-2" placeholder="Enter a public document URL...">
+                    <div class="flex gap-2">
+                        <button id="convertUrlPDF" class="btn btn-blue">Convert to PDF</button>
+                        <button id="convertUrlWord" class="btn btn-outline">Convert to Word</button>
+                        <button id="convertUrlHTML" class="btn btn-outline">Convert to HTML</button>
+                        <button id="convertUrlTXT" class="btn btn-outline">Convert to TXT</button>
+                    </div>
+                </div>
+                <div id="convertResult" class="mt-6 text-gray-600"></div>
+            </div>
+        </div>
+    </main>
+    <div id="footer"></div>
+    <script>
+        fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);
+
+        // Tab switching
+        document.getElementById('tab-pdf').onclick = function() {
+            this.classList.add('active');
+            document.getElementById('tab-convert').classList.remove('active');
+            document.getElementById('pdf-viewer-tab').style.display = '';
+            document.getElementById('convert-tab').style.display = 'none';
+        };
+        document.getElementById('tab-convert').onclick = function() {
+            this.classList.add('active');
+            document.getElementById('tab-pdf').classList.remove('active');
+            document.getElementById('pdf-viewer-tab').style.display = 'none';
+            document.getElementById('convert-tab').style.display = '';
+        };
+
+        // PDF.js viewer
+        let pdfDoc = null, pageNum = 1, pageRendering = false, pageNumPending = null, pdfFileName = "", pdfFileBlob = null;
+
+        function renderPage(num) {
+            pageRendering = true;
+            pdfDoc.getPage(num).then(function(page) {
+                const scale = 1.2;
+                const viewport = page.getViewport({ scale: scale });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext).promise.then(function() {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+                const container = document.getElementById('pdfContainer');
+                container.innerHTML = "";
+                container.appendChild(canvas);
+                document.getElementById('pageInfo').textContent = `Page ${num} of ${pdfDoc.numPages}`;
+                document.getElementById('prevPage').disabled = (num <= 1);
+                document.getElementById('nextPage').disabled = (num >= pdfDoc.numPages);
+            });
+        }
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+        document.getElementById('pdfInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file || file.type !== "application/pdf") {
+                document.getElementById('pdfContainer').innerHTML = "PDF preview will appear here after upload.";
+                document.getElementById('pdfToolbar').style.display = "none";
+                return;
+            }
+            pdfFileName = file.name;
+            pdfFileBlob = file;
+            document.getElementById('pdfName').textContent = pdfFileName;
+            window['pdfjsLib'].GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.worker.min.js";
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const typedarray = new Uint8Array(evt.target.result);
+                window['pdfjsLib'].getDocument(typedarray).promise.then(function(pdf) {
+                    pdfDoc = pdf;
+                    pageNum = 1;
+                    document.getElementById('pdfToolbar').style.display = "flex";
+                    renderPage(pageNum);
+                }, function(error) {
+                    document.getElementById('pdfContainer').innerHTML = `<span class="text-red-600">Failed to load PDF: ${error.message}</span>`;
+                    document.getElementById('pdfToolbar').style.display = "none";
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        });
+        document.getElementById('prevPage').addEventListener('click', function() {
+            if (pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        });
+        document.getElementById('nextPage').addEventListener('click', function() {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        });
+        document.getElementById('downloadPDF').addEventListener('click', function() {
+            if (pdfFileBlob) {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(pdfFileBlob);
+                a.download = pdfFileName || 'DocuHelp_Document.pdf';
+                a.click();
+            }
+        });
+
+        // Conversion: Paste Text/HTML to PDF/Word/HTML/TXT
+        document.getElementById('convertPastePDF').onclick = function() {
+            const text = document.getElementById('pasteInput').value;
+            if (!text.trim()) return alert("Paste some text or HTML first.");
+            const temp = document.createElement('div');
+            temp.innerHTML = text;
+            html2pdf().from(temp).set({margin: 10, filename: 'DocuHelp_Text.pdf'}).save();
+        };
+        document.getElementById('convertPasteWord').onclick = function() {
+            const text = document.getElementById('pasteInput').value;
+            if (!text.trim()) return alert("Paste some text or HTML first.");
+            const blob = new Blob([text], {type: "application/msword"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "DocuHelp_Text.doc";
+            a.click();
+        };
+        document.getElementById('convertPasteHTML').onclick = function() {
+            const text = document.getElementById('pasteInput').value;
+            if (!text.trim()) return alert("Paste some text or HTML first.");
+            const blob = new Blob([text], {type: "text/html"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "DocuHelp_Text.html";
+            a.click();
+        };
+        document.getElementById('convertPasteTXT').onclick = function() {
+            const text = document.getElementById('pasteInput').value;
+            if (!text.trim()) return alert("Paste some text or HTML first.");
+            const blob = new Blob([text], {type: "text/plain"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "DocuHelp_Text.txt";
+            a.click();
+        };
+
+        // Conversion: Upload File to PDF/Word/Excel/HTML/TXT
+        document.getElementById('convertFilePDF').onclick = function() {
+            const file = document.getElementById('convertFileInput').files[0];
+            if (!file) return alert("Upload a document first.");
+            convertFileToPDF(file);
+        };
+        document.getElementById('convertFileWord').onclick = function() {
+            const file = document.getElementById('convertFileInput').files[0];
+            if (!file) return alert("Upload a document first.");
+            convertFileToWord(file);
+        };
+        document.getElementById('convertFileExcel').onclick = function() {
+            const file = document.getElementById('convertFileInput').files[0];
+            if (!file) return alert("Upload a document first.");
+            convertFileToExcel(file);
+        };
+        document.getElementById('convertFileHTML').onclick = function() {
+            const file = document.getElementById('convertFileInput').files[0];
+            if (!file) return alert("Upload a document first.");
+            convertFileToHTML(file);
+        };
+        document.getElementById('convertFileTXT').onclick = function() {
+            const file = document.getElementById('convertFileInput').files[0];
+            if (!file) return alert("Upload a document first.");
+            convertFileToTXT(file);
+        };
+
+        // Conversion: URL to PDF/Word/HTML/TXT
+        async function fetchUrlContent(url) {
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error("Failed to fetch URL");
+                return await res.text();
+            } catch (e) {
+                alert("Could not fetch document from URL.");
+                return null;
+            }
+        }
+        document.getElementById('convertUrlPDF').onclick = async function() {
+            const url = document.getElementById('convertUrlInput').value;
+            if (!url) return alert("Enter a valid URL.");
+            const content = await fetchUrlContent(url);
+            if (!content) return;
+            const temp = document.createElement('div');
+            temp.innerHTML = content;
+            html2pdf().from(temp).set({margin: 10, filename: 'DocuHelp_URL.pdf'}).save();
+        };
+        document.getElementById('convertUrlWord').onclick = async function() {
+            const url = document.getElementById('convertUrlInput').value;
+            if (!url) return alert("Enter a valid URL.");
+            const content = await fetchUrlContent(url);
+            if (!content) return;
+            const blob = new Blob([content], {type: "application/msword"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "DocuHelp_URL.doc";
+            a.click();
+        };
+        document.getElementById('convertUrlHTML').onclick = async function() {
+            const url = document.getElementById('convertUrlInput').value;
+            if (!url) return alert("Enter a valid URL.");
+            const content = await fetchUrlContent(url);
+            if (!content) return;
+            const blob = new Blob([content], {type: "text/html"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "DocuHelp_URL.html";
+            a.click();
+        };
+        document.getElementById('convertUrlTXT').onclick = async function() {
+            const url = document.getElementById('convertUrlInput').value;
+            if (!url) return alert("Enter a valid URL.");
+            const content = await fetchUrlContent(url);
+            if (!content) return;
+            const blob = new Blob([content], {type: "text/plain"});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "DocuHelp_URL.txt";
+            a.click();
+        };
+
+        // Conversion helpers for file uploads
+        function convertFileToPDF(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'pdf') {
+                // Already PDF, just download
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(file);
+                a.download = file.name;
+                a.click();
+            } else if (ext === 'docx' || ext === 'doc') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    mammoth.convertToHtml({arrayBuffer: evt.target.result}).then(function(result) {
+                        const temp = document.createElement('div');
+                        temp.innerHTML = result.value;
+                        html2pdf().from(temp).set({margin: 10, filename: file.name.replace(/\.\w+$/, '.pdf')}).save();
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+            } else if (ext === 'txt') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const temp = document.createElement('div');
+                    temp.textContent = evt.target.result;
+                    html2pdf().from(temp).set({margin: 10, filename: file.name.replace(/\.\w+$/, '.pdf')}).save();
+                };
+                reader.readAsText(file);
+            } else if (ext === 'html' || ext === 'htm') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const temp = document.createElement('div');
+                    temp.innerHTML = evt.target.result;
+                    html2pdf().from(temp).set({margin: 10, filename: file.name.replace(/\.\w+$/, '.pdf')}).save();
+                };
+                reader.readAsText(file);
+            } else if (ext === 'xlsx' || ext === 'xls') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const workbook = XLSX.read(evt.target.result, {type: 'binary'});
+                    const html = XLSX.utils.sheet_to_html(workbook.Sheets[workbook.SheetNames[0]]);
+                    const temp = document.createElement('div');
+                    temp.innerHTML = html;
+                    html2pdf().from(temp).set({margin: 10, filename: file.name.replace(/\.\w+$/, '.pdf')}).save();
+                };
+                reader.readAsBinaryString(file);
+            } else {
+                alert("Unsupported file type for conversion.");
+            }
+        }
+        function convertFileToWord(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'docx' || ext === 'doc') {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(file);
+                a.download = file.name;
+                a.click();
+            } else if (ext === 'txt' || ext === 'html' || ext === 'htm') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const blob = new Blob([evt.target.result], {type: "application/msword"});
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = file.name.replace(/\.\w+$/, '.doc');
+                    a.click();
+                };
+                reader.readAsText(file);
+            } else {
+                alert("Conversion to Word is only supported for text and HTML files.");
+            }
+        }
+        function convertFileToExcel(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'xlsx' || ext === 'xls') {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(file);
+                a.download = file.name;
+                a.click();
+            } else if (ext === 'csv' || ext === 'txt') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.aoa_to_sheet([evt.target.result.split('\n')]);
+                    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+                    XLSX.writeFile(wb, file.name.replace(/\.\w+$/, '.xlsx'));
+                };
+                reader.readAsText(file);
+            } else {
+                alert("Conversion to Excel is only supported for CSV and TXT files.");
+            }
+        }
+        function convertFileToHTML(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'html' || ext === 'htm') {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(file);
+                a.download = file.name;
+                a.click();
+            } else if (ext === 'docx' || ext === 'doc') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    mammoth.convertToHtml({arrayBuffer: evt.target.result}).then(function(result) {
+                        const blob = new Blob([result.value], {type: "text/html"});
+                        const a = document.createElement('a');
+                        a.href = URL.createObjectURL(blob);
+                        a.download = file.name.replace(/\.\w+$/, '.html');
+                        a.click();
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+            } else if (ext === 'txt') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const blob = new Blob([evt.target.result], {type: "text/html"});
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = file.name.replace(/\.\w+$/, '.html');
+                    a.click();
+                };
+                reader.readAsText(file);
+            } else if (ext === 'xlsx' || ext === 'xls') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const workbook = XLSX.read(evt.target.result, {type: 'binary'});
+                    const html = XLSX.utils.sheet_to_html(workbook.Sheets[workbook.SheetNames[0]]);
+                    const blob = new Blob([html], {type: "text/html"});
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = file.name.replace(/\.\w+$/, '.html');
+                    a.click();
+                };
+                reader.readAsBinaryString(file);
+            } else {
+                alert("Unsupported file type for conversion to HTML.");
+            }
+        }
+        function convertFileToTXT(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (ext === 'txt') {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(file);
+                a.download = file.name;
+                a.click();
+            } else if (ext === 'docx' || ext === 'doc') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    mammoth.extractRawText({arrayBuffer: evt.target.result}).then(function(result) {
+                        const blob = new Blob([result.value], {type: "text/plain"});
+                        const a = document.createElement('a');
+                        a.href = URL.createObjectURL(blob);
+                        a.download = file.name.replace(/\.\w+$/, '.txt');
+                        a.click();
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+            } else if (ext === 'html' || ext === 'htm') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const temp = document.createElement('div');
+                    temp.innerHTML = evt.target.result;
+                    const text = temp.innerText;
+                    const blob = new Blob([text], {type: "text/plain"});
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = file.name.replace(/\.\w+$/, '.txt');
+                    a.click();
+                };
+                reader.readAsText(file);
+            } else if (ext === 'xlsx' || ext === 'xls') {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const workbook = XLSX.read(evt.target.result, {type: 'binary'});
+                    const ws = workbook.Sheets[workbook.SheetNames[0]];
+                    const csv = XLSX.utils.sheet_to_csv(ws);
+                    const blob = new Blob([csv], {type: "text/plain"});
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = file.name.replace(/\.\w+$/, '.txt');
+                    a.click();
+                };
+                reader.readAsBinaryString(file);
+            } else {
+                alert("Unsupported file type for conversion to TXT.");
+            }
+        }
+    </script>
+</body>
+</html>
