@@ -1,167 +1,431 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <title>DocuHelp Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DocuHelp</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-      import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-      const firebaseConfig = {
-        apiKey: "AIzaSyCSUBNwaZCILWdcxFBu8OCKZhxRJEjIcLc",
-        authDomain: "docuhelp-d96d9.firebaseapp.com",
-        projectId: "docuhelp-d96d9",
-        storageBucket: "docuhelp-d96d9.firebasestorage.app",
-        messagingSenderId: "411792849295",
-        appId: "1:411792849295:web:d6f5a15bbe728a9cc5b3fa",
-        measurementId: "G-YRLZ0QT8YQ"
-      };
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-
-      // Email/Password Sign In
-      document.addEventListener('DOMContentLoaded', () => {
-        const emailForm = document.getElementById('email-signin-form');
-        if (emailForm) {
-          emailForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            try {
-              await signInWithEmailAndPassword(auth, email, password);
-              alert('Signed in successfully!');
-              window.location.href = "dashboard/index.html";
-            } catch (error) {
-              alert(error.message);
-            }
-          });
+    <link rel="stylesheet" href="css/themes.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0540F2 0%, #3B82F6 100%);
         }
-
-        // Google Sign In
-        const googleBtn = document.getElementById('google-signin');
-        if (googleBtn) {
-          googleBtn.addEventListener('click', async () => {
-            const provider = new GoogleAuthProvider();
-            try {
-              await signInWithPopup(auth, provider);
-              alert('Signed in with Google!');
-              window.location.href = "dashboard/index.html";
-            } catch (error) {
-              alert(error.message);
-            }
-          });
+        .auth-form {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
         }
-
-        // Anonymous Sign In
-        const anonBtn = document.getElementById('anon-signin');
-        if (anonBtn) {
-          anonBtn.addEventListener('click', async () => {
-            try {
-              await signInAnonymously(auth);
-              alert('Signed in as guest!');
-              window.location.href = "dashboard/index.html";
-            } catch (error) {
-              alert(error.message);
-            }
-          });
+        [data-theme="dark"] .auth-form {
+            background: rgba(31, 41, 55, 0.95);
         }
-      });
-    </script>
+        .social-btn {
+            transition: all 0.3s ease;
+        }
+        .social-btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-blue-200 min-h-screen flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full">
-        <div class="flex flex-col items-center mb-8">
-            <svg class="h-12 w-12 text-blue-600 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
-                <path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/>
-                <rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/>
-                <rect x="30" y="45" width="35" height="3" fill="white" rx="1"/>
-                <rect x="30" y="52" width="35" height="2" fill="white" rx="1"/>
-                <rect x="30" y="57" width="25" height="2" fill="white" rx="1"/>
-            </svg>
-            <h1 class="text-2xl font-bold font-roboto-slab text-blue-600">DocuHelp</h1>
-        </div>
-        <h2 class="text-xl font-semibold text-gray-900 mb-4 text-center">Sign in to DocuHelp</h2>
-        <form id="email-signin-form" class="space-y-4 mb-4">
-            <input type="email" id="email" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Email address" required>
-            <input type="password" id="password" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Password" required>
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition-colors">Sign in with Email</button>
-        </form>
-        <div class="flex items-center my-4">
-            <div class="flex-grow border-t border-gray-200"></div>
-            <span class="mx-2 text-gray-400 text-sm">or</span>
-            <div class="flex-grow border-t border-gray-200"></div>
-        </div>
-        <div class="flex flex-col gap-2 mb-4">
-            <button id="google-signin" class="w-full flex items-center justify-center gap-2 border border-gray-300 rounded py-2 font-semibold hover:bg-gray-50 transition-colors">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="h-5 w-5"> Sign in with Google
-            </button>
-            <button id="anon-signin" class="w-full flex items-center justify-center gap-2 border border-gray-300 rounded py-2 font-semibold hover:bg-gray-50 transition-colors">
-                <span class="fa fa-user-secret text-gray-500"></span> Continue as Guest
-            </button>
-        </div>
-        <div class="flex items-center justify-center mb-4">
-            <label for="lang" class="mr-2 text-gray-700">Language:</label>
-            <select id="lang" class="border border-gray-300 rounded px-2 py-1 text-sm">
-                <option value="en">English</option>
-                <option value="xh">isiXhosa</option>
-                <option value="zu">isiZulu</option>
-                <option value="af">Afrikaans</option>
-                <option value="st">Sesotho</option>
-                <option value="nso">Sepedi</option>
-                <option value="ts">Xitsonga</option>
-                <option value="ve">Tshivenḓa</option>
-                <option value="tn">Setswana</option>
-                <option value="ss">siSwati</option>
-                <option value="nr">isiNdebele</option>
-                <option value="sw">Kiswahili</option>
-                <option value="pt">Português</option>
-                <option value="fr">Français</option>
-            </select>
-        </div>
-        <div class="mb-6">
-            <a href="index.html" class="text-blue-600 hover:underline text-sm">Back to Home</a>
-        </div>
-        <div class="bg-blue-50 rounded-lg p-4">
-            <h3 class="text-lg font-bold text-blue-700 mb-2 text-center">Membership Benefits</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div class="border rounded p-3 bg-white">
-                    <h4 class="font-semibold text-blue-600 mb-1 text-center">Non-Members</h4>
-                    <ul class="list-disc pl-5 text-gray-700">
-                        <li>Generate & download documents</li>
-                        <li>Access free tools & templates</li>
-                        <li>Documents deleted daily</li>
-                        <li>Basic security (no encryption)</li>
-                        <li>Limited support</li>
-                    </ul>
+<body class="bg-gray-50">
+    <div class="auth-container flex items-center justify-center px-4">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <div class="flex justify-center mb-6">
+                    <svg class="text-white h-12 w-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+                        <path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="currentColor" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                        <rect x="25" y="40" width="45" height="28" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.5)" stroke-width="1" rx="2"/>
+                        <rect x="30" y="45" width="35" height="3" fill="currentColor" rx="1"/>
+                        <rect x="30" y="52" width="35" height="2" fill="currentColor" rx="1"/>
+                        <rect x="30" y="57" width="25" height="2" fill="currentColor" rx="1"/>
+                    </svg>
                 </div>
-                <div class="border rounded p-3 bg-white">
-                    <h4 class="font-semibold text-blue-600 mb-1 text-center">Registered (Free)</h4>
-                    <ul class="list-disc pl-5 text-gray-700">
-                        <li>Save and track documents</li>
-                        <li>Personal dashboard & profile</li>
-                        <li>Basic document versioning</li>
-                        <li>Standard templates & viewers</li>
-                        <li>Email support</li>
-                    </ul>
+                <h2 class="text-3xl font-bold text-white mb-2">
+                    Welcome to DocuHelp
+                </h2>
+                <p class="text-blue-100">
+                    Sign in to manage your documents securely
+                </p>
+            </div>
+
+            <!-- Auth Form -->
+            <div class="auth-form rounded-lg shadow-2xl p-8">
+                <!-- Theme Toggle -->
+                <div class="flex justify-end mb-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Toggle theme">
+                        <i class="fas fa-moon text-gray-600"></i>
+                    </button>
                 </div>
-                <div class="border rounded p-3 bg-white">
-                    <h4 class="font-semibold text-blue-600 mb-1 text-center">Subscribed/Partners</h4>
-                    <ul class="list-disc pl-5 text-gray-700">
-                        <li>Encrypted cloud storage</li>
-                        <li>Advanced version control</li>
-                        <li>Document sharing & workflow</li>
-                        <li>Digital signatures & audit trails</li>
-                        <li>Priority support & integrations</li>
-                    </ul>
+
+                <!-- Tab Navigation -->
+                <div class="flex mb-6 bg-gray-100 p-1 rounded-lg">
+                    <button id="signin-tab" class="flex-1 py-2 px-4 text-center rounded-md font-medium transition-all bg-white text-blue-600 shadow-sm">
+                        Sign In
+                    </button>
+                    <button id="signup-tab" class="flex-1 py-2 px-4 text-center rounded-md font-medium transition-all text-gray-600 hover:text-gray-800">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- Sign In Form -->
+                <form id="signin-form" class="space-y-6">
+                    <div>
+                        <label for="signin-email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email address
+                        </label>
+                        <input id="signin-email" name="email" type="email" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label for="signin-password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <input id="signin-password" name="password" type="password" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" name="remember-me" type="checkbox" 
+                                   class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                                Remember me
+                            </label>
+                        </div>
+                        <button type="button" id="forgot-password" class="text-sm text-blue-600 hover:text-blue-500">
+                            Forgot password?
+                        </button>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                        Sign In
+                    </button>
+                </form>
+
+                <!-- Sign Up Form -->
+                <form id="signup-form" class="space-y-6 hidden">
+                    <div>
+                        <label for="signup-name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Full Name
+                        </label>
+                        <input id="signup-name" name="name" type="text" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email address
+                        </label>
+                        <input id="signup-email" name="email" type="email" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <input id="signup-password" name="password" type="password" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <label for="signup-confirm-password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Confirm Password
+                        </label>
+                        <input id="signup-confirm-password" name="confirm-password" type="password" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div class="flex items-center">
+                        <input id="terms-agree" name="terms-agree" type="checkbox" required
+                               class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="terms-agree" class="ml-2 block text-sm text-gray-700">
+                            I agree to the <a href="terms.html" class="text-blue-600 hover:text-blue-500">Terms of Service</a> and <a href="privacy.html" class="text-blue-600 hover:text-blue-500">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                        Create Account
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Login -->
+                <div class="mt-6 grid grid-cols-2 gap-3">
+                    <button id="google-signin" class="social-btn w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <i class="fab fa-google text-red-500 mr-2"></i>
+                        Google
+                    </button>
+                    <button id="apple-signin" class="social-btn w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <i class="fab fa-apple text-black mr-2"></i>
+                        Apple
+                    </button>
+                </div>
+
+                <!-- Anonymous Login -->
+                <div class="mt-4">
+                    <button id="anonymous-signin" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-sm font-medium text-gray-500 hover:bg-gray-100">
+                        <i class="fas fa-user-secret mr-2"></i>
+                        Continue as Guest
+                    </button>
+                </div>
+
+                <!-- Error/Success Messages -->
+                <div id="auth-message" class="mt-4 hidden">
+                    <div class="rounded-md p-4" id="message-container">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i id="message-icon" class="h-5 w-5"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p id="message-text" class="text-sm"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back to Home -->
+                <div class="mt-6 text-center">
+                    <a href="index.html" class="text-sm text-blue-600 hover:text-blue-500">
+                        <i class="fas fa-arrow-left mr-1"></i>
+                        Back to Home
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="text-center text-xs text-gray-400 mt-4">
-            &copy; 2025 DocuHelp. Part of an integrated Ecosystem.
+    </div>
+
+    <!-- Password Reset Modal -->
+    <div id="password-reset-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Reset Password</h3>
+            <p class="text-sm text-gray-600 mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+            
+            <form id="password-reset-form">
+                <div class="mb-4">
+                    <label for="reset-email" class="block text-sm font-medium text-gray-700 mb-2">
+                        Email address
+                    </label>
+                    <input id="reset-email" name="email" type="email" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancel-reset" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700">
+                        Send Reset Link
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script src="js/theme-manager.js"></script>
+    <script>
+        // Initialize theme manager
+        const themeManager = new ThemeManager();
+        
+        // Theme toggle event
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            themeManager.toggleTheme();
+        });
+
+        // Tab switching
+        const signinTab = document.getElementById('signin-tab');
+        const signupTab = document.getElementById('signup-tab');
+        const signinForm = document.getElementById('signin-form');
+        const signupForm = document.getElementById('signup-form');
+
+        signinTab.addEventListener('click', () => {
+            signinTab.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+            signinTab.classList.remove('text-gray-600');
+            signupTab.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+            signupTab.classList.add('text-gray-600');
+            signinForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+        });
+
+        signupTab.addEventListener('click', () => {
+            signupTab.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+            signupTab.classList.remove('text-gray-600');
+            signinTab.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+            signinTab.classList.add('text-gray-600');
+            signupForm.classList.remove('hidden');
+            signinForm.classList.add('hidden');
+        });
+
+        // Check for hash in URL
+        if (window.location.hash === '#register') {
+            signupTab.click();
+        }
+
+        // Authentication event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const auth = window.docuHelpAuth;
+            
+            // Sign in form
+            signinForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('signin-email').value;
+                const password = document.getElementById('signin-password').value;
+                
+                showLoading('Signing in...');
+                const result = await auth.signInWithEmail(email, password);
+                
+                if (result.success) {
+                    showMessage('success', 'Sign in successful!');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard/index.html';
+                    }, 1000);
+                } else {
+                    showMessage('error', result.error);
+                }
+            });
+
+            // Sign up form
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const confirmPassword = document.getElementById('signup-confirm-password').value;
+                
+                if (password !== confirmPassword) {
+                    showMessage('error', 'Passwords do not match');
+                    return;
+                }
+                
+                showLoading('Creating account...');
+                const result = await auth.signUpWithEmail(email, password, name);
+                
+                if (result.success) {
+                    showMessage('success', 'Account created successfully!');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard/index.html';
+                    }, 1000);
+                } else {
+                    showMessage('error', result.error);
+                }
+            });
+
+            // Google sign in
+            document.getElementById('google-signin').addEventListener('click', async () => {
+                showLoading('Signing in with Google...');
+                const result = await auth.signInWithGoogle();
+                
+                if (result.success) {
+                    showMessage('success', 'Google sign in successful!');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard/index.html';
+                    }, 1000);
+                } else {
+                    showMessage('error', result.error);
+                }
+            });
+
+            // Apple sign in
+            document.getElementById('apple-signin').addEventListener('click', async () => {
+                showLoading('Signing in with Apple...');
+                const result = await auth.signInWithApple();
+                
+                if (result.success) {
+                    showMessage('success', 'Apple sign in successful!');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard/index.html';
+                    }, 1000);
+                } else {
+                    showMessage('error', result.error);
+                }
+            });
+
+            // Anonymous sign in
+            document.getElementById('anonymous-signin').addEventListener('click', async () => {
+                showLoading('Signing in as guest...');
+                const result = await auth.signInAnonymously();
+                
+                if (result.success) {
+                    showMessage('success', 'Guest sign in successful!');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard/index.html';
+                    }, 1000);
+                } else {
+                    showMessage('error', result.error);
+                }
+            });
+
+            // Password reset
+            document.getElementById('forgot-password').addEventListener('click', () => {
+                document.getElementById('password-reset-modal').classList.remove('hidden');
+                document.getElementById('password-reset-modal').classList.add('flex');
+            });
+
+            document.getElementById('cancel-reset').addEventListener('click', () => {
+                document.getElementById('password-reset-modal').classList.add('hidden');
+                document.getElementById('password-reset-modal').classList.remove('flex');
+            });
+
+            document.getElementById('password-reset-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('reset-email').value;
+                
+                const result = await auth.resetPassword(email);
+                
+                if (result.success) {
+                    showMessage('success', 'Password reset email sent!');
+                    document.getElementById('password-reset-modal').classList.add('hidden');
+                    document.getElementById('password-reset-modal').classList.remove('flex');
+                } else {
+                    showMessage('error', result.error);
+                }
+            });
+        });
+
+        // Utility functions
+        function showMessage(type, message) {
+            const messageContainer = document.getElementById('auth-message');
+            const messageDiv = document.getElementById('message-container');
+            const messageIcon = document.getElementById('message-icon');
+            const messageText = document.getElementById('message-text');
+            
+            messageContainer.classList.remove('hidden');
+            messageText.textContent = message;
+            
+            if (type === 'success') {
+                messageDiv.className = 'rounded-md p-4 bg-green-50 border border-green-200';
+                messageIcon.className = 'h-5 w-5 fas fa-check-circle text-green-400';
+                messageText.className = 'text-sm text-green-800';
+            } else if (type === 'error') {
+                messageDiv.className = 'rounded-md p-4 bg-red-50 border border-red-200';
+                messageIcon.className = 'h-5 w-5 fas fa-exclamation-circle text-red-400';
+                messageText.className = 'text-sm text-red-800';
+            }
+            
+            setTimeout(() => {
+                messageContainer.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showLoading(message) {
+            showMessage('info', message);
+        }
+    </script>
 </body>
 </html>

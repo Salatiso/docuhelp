@@ -1,41 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <title>DocuHelp Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <script src="../assets/js/main.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Dashboard | DocuHelp</title>
+  <link rel="stylesheet" href="../styles/globals.css">
+  <link rel="stylesheet" href="../styles/variables.css">
+  <link rel="stylesheet" href="../css/themes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="../js/theme-manager.js"></script>
+  <script type="module" src="../js/firebase-config.js"></script>
+  <style>
+    .dashboard-header { background: linear-gradient(135deg, #0540F2 0%, #3B82F6 100%); }
+    .dashboard-card { transition: box-shadow 0.2s; }
+    .dashboard-card:hover { box-shadow: 0 8px 24px rgba(59,130,246,0.10); }
+  </style>
 </head>
-<body>
-  <div id="header"></div>
-  <script>fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);</script>
-  <main class="max-w-5xl mx-auto py-12 px-4">
-    <h1 class="text-3xl font-bold text-blue-700 mb-6">Welcome to Your DocuHelp Dashboard</h1>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="font-semibold text-lg mb-2">My Documents</h2>
-        <p class="text-gray-600 mb-4">View and manage all your uploaded and created documents.</p>
-        <a href="../modules/viewers.html" class="btn btn-blue">Open Viewer</a>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="dashboard-header py-4 px-6 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <svg class="text-white h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+        <path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#fff" stroke-width="1"/>
+        <rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#fff" stroke-width="1" rx="2"/>
+      </svg>
+      <span class="text-2xl font-bold text-white">DocuHelp Dashboard</span>
+    </div>
+    <nav class="flex gap-6">
+      <a href="index.html" class="text-white font-semibold">Home</a>
+      <a href="profile.html" class="text-white hover:text-blue-200">Profile</a>
+      <a href="settings.html" class="text-white hover:text-blue-200">Settings</a>
+      <a href="activity.html" class="text-white hover:text-blue-200">Activity</a>
+      <a href="notifications.html" class="text-white hover:text-blue-200">Notifications</a>
+      <button id="theme-toggle" class="ml-4 text-white bg-blue-700 px-2 py-1 rounded hover:bg-blue-800" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button onclick="window.docuHelpAuth.signOut()" class="ml-2 text-white border border-white px-2 py-1 rounded hover:bg-blue-800">Sign Out</button>
+    </nav>
+  </header>
+  <!-- Main -->
+  <main class="max-w-6xl mx-auto py-8 px-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- LifeCV Card -->
+      <div class="dashboard-card bg-white rounded-lg p-6 shadow">
+        <h3 class="text-lg font-bold text-blue-700 mb-2">Your LifeCV</h3>
+        <p class="text-gray-600 mb-3">All your document activity is tracked and verified for your Sazi LifeCV.</p>
+        <a href="https://hub.sazi.life/cv/{userId}" target="_blank" class="text-blue-600 hover:underline">View Full LifeCV</a>
+        <div class="mt-4 text-sm text-gray-500">
+          <span id="lifecv-docs">Documents created: --</span><br>
+          <span id="lifecv-skills">Skills acquired: --</span>
+        </div>
       </div>
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="font-semibold text-lg mb-2">Templates</h2>
-        <p class="text-gray-600 mb-4">Browse and use professional document templates.</p>
-        <a href="../modules/templates.html" class="btn btn-blue">Browse Templates</a>
+      <!-- Quick Actions -->
+      <div class="dashboard-card bg-white rounded-lg p-6 shadow flex flex-col gap-4">
+        <a href="../tools/pdf-converter.html" class="bg-blue-50 text-blue-700 px-4 py-2 rounded hover:bg-blue-100 font-semibold flex items-center gap-2">
+          <i class="fas fa-file-pdf"></i> PDF Converter
+        </a>
+        <a href="../tools/word-processor.html" class="bg-blue-50 text-blue-700 px-4 py-2 rounded hover:bg-blue-100 font-semibold flex items-center gap-2">
+          <i class="fas fa-file-word"></i> Word Editor
+        </a>
+        <a href="../tools/digital-signature.html" class="bg-blue-50 text-blue-700 px-4 py-2 rounded hover:bg-blue-100 font-semibold flex items-center gap-2">
+          <i class="fas fa-signature"></i> E-Signatures
+        </a>
       </div>
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="font-semibold text-lg mb-2">Account Settings</h2>
-        <p class="text-gray-600 mb-4">Manage your profile, security, and preferences.</p>
-        <a href="profile.html" class="btn btn-blue">Profile</a>
+      <!-- Notifications Preview -->
+      <div class="dashboard-card bg-white rounded-lg p-6 shadow">
+        <h3 class="text-lg font-bold text-blue-700 mb-2">Notifications</h3>
+        <ul class="text-gray-600 text-sm" id="dashboard-notifications">
+          <li>No new notifications.</li>
+        </ul>
+        <a href="notifications.html" class="text-blue-600 hover:underline text-xs mt-2 block">View all</a>
       </div>
     </div>
-    <div class="mt-10">
-      <h2 class="text-xl font-semibold mb-2">Recent Activity</h2>
-      <p class="text-gray-500">Your recent document actions will appear here.</p>
-    </div>
+    <!-- Recent Documents -->
+    <section class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-bold text-gray-900 mb-4">Recent Documents</h3>
+      <div id="recent-documents" class="space-y-2 text-gray-700 text-sm">
+        <div>Loading...</div>
+      </div>
+      <a href="documents.html" class="text-blue-600 hover:underline text-xs mt-2 block">View all documents</a>
+    </section>
   </main>
-  <div id="footer"></div>
-  <script>fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);</script>
+  <!-- Footer -->
+  <footer class="text-center py-6 text-gray-400 text-xs">
+    &copy; 2025 DocuHelp. Part of the Sazi Ecosystem.
+  </footer>
+  <script>
+    // Theme toggle (for static HTML)
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      window.docuHelpTheme.toggleTheme();
+    });
+
+    // Dummy LifeCV data (replace with real API call)
+    document.getElementById('lifecv-docs').textContent = "Documents created: 15";
+    document.getElementById('lifecv-skills').textContent = "Skills acquired: 8";
+    // Dummy recent docs (replace with real data)
+    document.getElementById('recent-documents').innerHTML = `
+      <div><i class="fas fa-file-alt text-blue-600 mr-2"></i> Employment Contract.docx <span class="text-gray-400">| 2 days ago</span></div>
+      <div><i class="fas fa-file-pdf text-red-500 mr-2"></i> Payslip_June2025.pdf <span class="text-gray-400">| 5 days ago</span></div>
+    `;
+  </script>
 </body>
 </html>
