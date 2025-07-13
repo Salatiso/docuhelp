@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuHelp - Proof of Residence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { --brand-color: #0540F2; }
+        body { font-family: 'Manrope', sans-serif; background-color: #f3f4f6; color: #1f2937; line-height: 1.7; }
+        .document-page { width: 210mm; min-height: 297mm; margin: 1.5rem auto; background-color: #ffffff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); position: relative; padding: 20mm; display: flex; flex-direction: column; }
+        .document-toolbar { position: sticky; top: 0; z-index: 1000; }
+        .page-header, .page-footer { position: absolute; left: 20mm; right: 20mm; font-size: 0.8rem; color: #6b7280; }
+        .page-header { top: 10mm; }
+        .page-footer { bottom: 10mm; }
+        .page-number { position: absolute; bottom: 10mm; right: 20mm; }
+        .brand-text { color: var(--brand-color); }
+        .cover-title, h1, h2, h3 { font-family: 'Roboto Slab', serif; }
+        h2 { border-bottom: 2px solid #e5e7eb; padding-bottom: 6px; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700; color: #111827; }
+        .editable { border: 1px dashed #d1d5db; padding: 2px 4px; border-radius: 4px; min-width: 50px; display: inline-block; }
+        .editable:hover { border-style: solid; border-color: var(--brand-color); }
+        .control-btn { display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #f9fafb; border: 1px solid #d1d5db; border-radius: 0.375rem; font-weight: 600; color: #374151; transition: all 0.2s; }
+        .control-btn:hover { background-color: #f3f4f6; border-color: #9ca3af; }
+        .back-cover-page { background-color: #1f2937; color: #f3f4f6; }
+        @media print {
+            body { background-color: #fff; }
+            .document-toolbar, .no-print { display: none !important; }
+            .document-page { margin: 0; box-shadow: none; border: none; min-height: 297mm; }
+            .editable { border: none !important; padding: 2px 0; }
+            .back-cover-page { background-color: #1f2937 !important; color: #f3f4f6 !important; }
+        }
+    </style>
+</head>
+<body onload="updatePageNumbers()">
+    <!-- Toolbar -->
+    <div class="document-toolbar bg-white/90 backdrop-blur-lg p-3 flex items-center justify-center gap-3 border-b border-gray-200 no-print">
+        <span class="font-bold text-sm uppercase tracking-wider text-gray-500 hidden md:inline">Proof of Residence</span>
+        <div class="flex-grow"></div>
+        <button onclick="printDocument()" class="control-btn" title="Print Document"><i class="fas fa-print"></i></button>
+        <button onclick="downloadPDF()" class="control-btn" title="Download as PDF"><i class="fas fa-file-pdf"></i></button>
+        <button onclick="shareDocument()" class="control-btn" title="Share Document"><i class="fas fa-share-alt"></i></button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="document-page">
+        <header class="mb-12">
+            <h1 class="text-2xl font-bold" contenteditable="true">[Your Name / Company Name]</h1>
+            <p contenteditable="true">[Your Address]</p>
+            <p contenteditable="true">[Your Contact Number]</p>
+            <p contenteditable="true">[Your Email Address]</p>
+        </header>
+
+        <p class="mb-8"><span class="editable" contenteditable="true">[Date]</span></p>
+        
+        <h2 class="text-2xl font-bold text-center !border-none">PROOF OF RESIDENCE</h2>
+
+        <p class="mt-8">To Whom It May Concern,</p>
+
+        <p class="mt-4">This letter serves to confirm that:</p>
+        <p class="my-4 text-center font-bold text-lg" contenteditable="true">[Tenant's Full Name] (ID: [Tenant's ID Number])</p>
+        <p>resides at the following property, which I own/manage:</p>
+        <p class="my-4 text-center font-bold text-lg" contenteditable="true">[Full Residential Address of Property]</p>
+        <p>I confirm that they have been a tenant at this address since <span class="editable" contenteditable="true">[Date Tenant Moved In]</span>.</p>
+        <p class="mt-4">This confirmation is issued at the request of the above-named individual. Should you require any further information, please do not hesitate to contact me.</p>
+
+        <div class="mt-auto pt-16">
+            <p>Sincerely,</p>
+            <div class="border-t-2 border-gray-400 pt-2 mt-12 w-1/2">
+                <p class="font-bold editable" contenteditable="true">[Your Full Name]</p>
+                <p class="text-sm editable" contenteditable="true">[Your Title, e.g., Landlord / Property Manager]</p>
+            </div>
+        </div>
+        
+        <div class="page-footer"><span>Proof of Residence</span></div>
+    </div>
+    
+    <!-- Back Cover Page -->
+    <div class="document-page back-cover-page">
+        <div class="text-left mb-8 flex items-center gap-3">
+             <svg class="h-12 w-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/><rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/><rect x="30" y="45" width="35" height="3" fill="white" rx="1"/><rect x="30" y="52" width="35" height="2" fill="white" rx="1"/><rect x="30" y="57" width="25" height="2" fill="white" rx="1"/></svg>
+            <span class="font-bold text-3xl text-gray-100" style="font-family: 'Roboto Slab', serif;">DocuHelp</span>
+        </div>
+        <div class="flex-grow flex flex-col justify-center items-center text-center">
+            <h2 class="!text-blue-400 !border-none">Clarity. Structure. Security.</h2>
+            <p class="max-w-xl text-slate-300">Empowering you to create, manage, and secure your most important documents with confidence and precision.</p>
+        </div>
+        <div class="text-xs text-slate-400 mt-auto pt-4 text-center"><span>https://salatiso.com/docuhelp/</span> | <span>support@salatiso.com</span> | <span>&copy; <span class="current-year"></span> DocuHelp</span></div>
+        <div class="page-footer"><span class="page-number">Page <span class="page-num"></span> of <span class="total-pages"></span></span></div>
+    </div>
+    <script src="https://salatiso.com/hrhelp/assets/js/core/main.js"></script>
+</body>
+</html>
