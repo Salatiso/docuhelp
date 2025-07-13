@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuHelp - Family Rental Agreement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { --brand-color: #0540F2; }
+        body { font-family: 'Manrope', sans-serif; background-color: #f3f4f6; color: #1f2937; line-height: 1.7; }
+        .document-page { width: 210mm; min-height: 297mm; margin: 1.5rem auto; background-color: #ffffff; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); position: relative; padding: 20mm; display: flex; flex-direction: column; }
+        .document-toolbar { position: sticky; top: 0; z-index: 1000; }
+        .page-header, .page-footer { position: absolute; left: 20mm; right: 20mm; font-size: 0.8rem; color: #6b7280; }
+        .page-header { top: 10mm; }
+        .page-footer { bottom: 10mm; }
+        .page-number { position: absolute; bottom: 10mm; right: 20mm; }
+        .brand-text { color: var(--brand-color); }
+        .cover-title, h1, h2, h3 { font-family: 'Roboto Slab', serif; }
+        h2 { border-bottom: 2px solid #e5e7eb; padding-bottom: 6px; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 700; color: #111827; }
+        .editable { border: 1px dashed #d1d5db; padding: 2px 4px; border-radius: 4px; min-width: 50px; display: inline-block; }
+        .editable:hover { border-style: solid; border-color: var(--brand-color); }
+        .control-btn { display: inline-flex; align-items: center; padding: 0.5rem 1rem; background-color: #f9fafb; border: 1px solid #d1d5db; border-radius: 0.375rem; font-weight: 600; color: #374151; transition: all 0.2s; }
+        .control-btn:hover { background-color: #f3f4f6; border-color: #9ca3af; }
+        .back-cover-page { background-color: #1f2937; color: #f3f4f6; }
+        .annexure-link { color: var(--brand-color); text-decoration: underline; font-weight: 500;}
+        @media print {
+            body { background-color: #fff; }
+            .document-toolbar, .no-print { display: none !important; }
+            .document-page { margin: 0; box-shadow: none; border: none; min-height: 297mm; }
+            .editable { border: none !important; padding: 2px 0; }
+            .back-cover-page { background-color: #1f2937 !important; color: #f3f4f6 !important; }
+        }
+    </style>
+</head>
+<body onload="updatePageNumbers()">
+    <!-- Toolbar -->
+    <div class="document-toolbar bg-white/90 backdrop-blur-lg p-3 flex items-center justify-center gap-3 border-b border-gray-200 no-print">
+        <span class="font-bold text-sm uppercase tracking-wider text-gray-500 hidden md:inline">Family Rental Agreement</span>
+        <div class="flex-grow"></div>
+        <button onclick="printDocument()" class="control-btn" title="Print Document"><i class="fas fa-print"></i></button>
+        <button onclick="downloadPDF()" class="control-btn" title="Download as PDF"><i class="fas fa-file-pdf"></i></button>
+        <button onclick="shareDocument()" class="control-btn" title="Share Document"><i class="fas fa-share-alt"></i></button>
+    </div>
+
+    <!-- Cover Page -->
+    <div id="cover-page" class="document-page">
+        <div class="text-left mb-8 flex items-center gap-3">
+            <svg class="h-12 w-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/><rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/><rect x="30" y="45" width="35" height="3" fill="white" rx="1"/><rect x="30" y="52" width="35" height="2" fill="white" rx="1"/><rect x="30" y="57" width="25" height="2" fill="white" rx="1"/></svg>
+            <span class="font-bold text-3xl text-gray-700" style="font-family: 'Roboto Slab', serif;">DocuHelp</span>
+        </div>
+        <div class="flex-grow flex flex-col items-center justify-center text-center">
+            <h1 class="cover-title text-6xl font-black text-gray-800" contenteditable="true">Family Rental Agreement</h1>
+            <p class="text-xl mt-4 text-gray-500" contenteditable="true">A Simple Agreement for Family Members or Partners</p>
+        </div>
+        <div class="page-footer"><span>Family Rental Agreement</span><span class="page-number">Page <span class="page-num"></span> of <span class="total-pages"></span></span></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="document-page">
+        <div class="page-header"><span class="font-bold brand-text">Family Rental Agreement</span></div>
+        <h2 class="!mt-0">1. The Parties</h2>
+        <p>This agreement is made on <span class="editable" contenteditable="true">[Date]</span> between:</p>
+        <p><strong>The Landlord:</strong> <span class="editable" contenteditable="true">[Full Name]</span></p>
+        <p><strong>The Tenant(s):</strong> <span class="editable" contenteditable="true">[Full Name(s)]</span></p>
+        <p>This agreement is founded on principles of equality and mutual respect, as detailed in <a href="#annexure-a" class="annexure-link">Annexure A</a>.</p>
+
+        <h2 class="text-2xl">2. The Property</h2>
+        <p>The Landlord agrees to rent to the Tenant the property located at <span class="editable" contenteditable="true">[Full Address of Property]</span> ("the Property").</p>
+
+        <h2 class="text-2xl">3. Term of Lease</h2>
+        <p class="editable" contenteditable="true">This lease shall begin on [Start Date] and continue on a month-to-month basis. Either party may terminate this agreement by providing at least one full calendar month's written notice to the other party.</p>
+        
+        <h2 class="text-2xl">4. Rent</h2>
+        <p class="editable" contenteditable="true">The rent for the Property is <strong>R[Amount]</strong> per month, payable on or before the 1st day of each month to the Landlord.</p>
+        
+        <h2 class="text-2xl">5. Utilities & Responsibilities</h2>
+        <p class="editable" contenteditable="true">The Tenant is responsible for the payment of all utilities, including electricity, water, and internet. The Tenant agrees to keep the property in a clean and reasonable condition. The Landlord is responsible for major structural repairs.</p>
+
+        <div class="grid grid-cols-2 gap-x-16 gap-y-12 mt-auto pt-8">
+            <div class="border-t-2 border-gray-400 pt-2"><p class="text-sm text-center">Landlord Signature</p></div>
+            <div class="border-t-2 border-gray-400 pt-2"><p class="text-sm text-center">Tenant Signature</p></div>
+        </div>
+        
+        <div class="page-footer"><span>Family Rental Agreement</span><span class="page-number">Page <span class="page-num"></span> of <span class="total-pages"></span></span></div>
+    </div>
+    
+    <!-- Annexure Page -->
+    <div id="annexure-a" class="document-page">
+        <h2 class="!mt-0 brand-text">Annexure A: The Principle of Equality in Agreements</h2>
+        <h3 class="text-xl font-bold mt-4">1. Foundational Principle: Equality Before the Law</h3>
+        <p>This agreement is drafted from a default position of equality, a cornerstone of the Constitution of the Republic of South Africa, 1996. Section 9(1) of the Constitution states: <strong>"Everyone is equal before the law and has the right to equal protection and benefit of the law."</strong></p>
+        <p>This means that regardless of gender or any other characteristic, both parties to this agreement are considered to have equal rights, responsibilities, and agency. The terms are structured to reflect a symmetrical relationship, where contributions, rights, and obligations are, by default, shared equally.</p>
+        
+        <h3 class="text-xl font-bold mt-4">2. Individual Agency and Freedom to Contract</h3>
+        <p>While equality is the default starting point, we recognize and respect the principle of individual agency. The parties are free to amend the default terms of this agreement to reflect their unique circumstances and mutual understanding. Any such amendments should be made in writing and signed by both parties to be considered valid.</p>
+        <p>The purpose of these templates is not to dictate how individuals should run their relationships, but to provide a fair, clear, and constitutionally-aligned framework from which they can build their own specific agreements.</p>
+
+        <h3 class="text-xl font-bold mt-4">3. Further Reading and Context</h3>
+        <p>The principles of legal symmetry and the consequences of their failure within South African family law are explored in depth in the Flamea Research & Advocacy report, *"Systemic Failures in South African Family Law: How Legal Asymmetries Undermine Children, Fathers, and Society."* This research, available at <a href="https://flamea.org" target="_blank" class="annexure-link">flamea.org</a>, provides critical context on why establishing a default position of equality in all personal and family-related contracts is essential for fostering fairness, reducing conflict, and upholding the spirit of the Constitution.</p>
+        <p class="mt-4">By entering into this agreement, the Parties acknowledge that they do so as equals, with the shared goal of creating a clear, fair, and respectful understanding to govern their relationship.</p>
+        <div class="page-footer"><span>Annexure A</span><span class="page-number">Page <span class="page-num"></span> of <span class="total-pages"></span></span></div>
+    </div>
+
+    <!-- Back Cover Page -->
+    <div class="document-page back-cover-page">
+        <div class="text-left mb-8 flex items-center gap-3">
+             <svg class="h-12 w-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/><rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/><rect x="30" y="45" width="35" height="3" fill="white" rx="1"/><rect x="30" y="52" width="35" height="2" fill="white" rx="1"/><rect x="30" y="57" width="25" height="2" fill="white" rx="1"/></svg>
+            <span class="font-bold text-3xl text-gray-100" style="font-family: 'Roboto Slab', serif;">DocuHelp</span>
+        </div>
+        <div class="flex-grow flex flex-col justify-center items-center text-center">
+            <h2 class="!text-blue-400 !border-none">Clarity. Structure. Security.</h2>
+            <p class="max-w-xl text-slate-300">Empowering you to create, manage, and secure your most important documents with confidence and precision.</p>
+        </div>
+        <div class="text-xs text-slate-400 mt-auto pt-4 text-center"><span>https://salatiso.com/docuhelp/</span> | <span>support@salatiso.com</span> | <span>&copy; <span class="current-year"></span> DocuHelp</span></div>
+        <div class="page-footer"><span class="page-number">Page <span class="page-num"></span> of <span class="total-pages"></span></span></div>
+    </div>
+    <script src="https://salatiso.com/hrhelp/assets/js/core/main.js"></script>
+</body>
+</html>
