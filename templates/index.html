@@ -2,99 +2,183 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DocuHelp Templates Library</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuHelp - Template Finder</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Manrope', sans-serif; }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(5, 64, 242, 0.15); }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .option-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(5, 64, 242, 0.1), 0 8px 10px -6px rgba(5, 64, 242, 0.1);
+            border-color: #3b82f6;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 1000px; /* Adjust as needed */
+            transition: max-height 0.5s ease-in-out;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="max-w-7xl mx-auto py-10 px-4">
-        <header class="mb-10">
-            <h1 class="text-4xl font-roboto-slab font-bold text-blue-900 mb-2">DocuHelp Document Templates Library</h1>
-            <p class="text-lg text-gray-700 mb-2">
-                Browse and use our growing collection of professional, academic, and creative document templates. If you can't find a template here, explore our partner sites or request a custom template by emailing <a href="mailto:docuhelp@salatiso.com" class="text-blue-700 underline">docuhelp@salatiso.com</a>.
-            </p>
-            <div class="mt-2 text-gray-600 text-sm">
-                For OHS, HR, and legal forms, visit our partner sites:
-                <ul class="list-disc pl-6 mt-1">
-                    <li><a href="https://safetyfirst.help/pages/ohs-system.html" class="text-blue-700 underline" target="_blank">SafetyHelp OHS Library</a></li>
-                    <li><a href="https://flamea.org/forms.html" class="text-blue-700 underline" target="_blank">Flamea Forms Library</a></li>
-                    <li><a href="https://salatiso.com/hrhelp/templates/" class="text-blue-700 underline" target="_blank">HRHelp Templates</a></li>
-                </ul>
-                <span class="block mt-2">DocuHelp and our partner sites are a work in progress—your feedback and requests help us serve you better!</span>
-            </div>
+<body class="text-gray-800">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold font-roboto-slab text-blue-900 mb-4">Template Finder</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Your central hub for finding the perfect document. Use our wizard for guided selection, search manually, or explore our full library.</p>
         </header>
 
-        <!-- Personal Agreements -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-blue-800 mb-4 border-b-2 border-blue-200 pb-2">Personal & Family Agreements</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <a href="personal/cohabitation-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Cohabitation Agreement</h3><p class="text-gray-600 mb-3 flex-grow">For partners living together to define property and financial arrangements.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="personal/engagement-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Engagement Agreement</h3><p class="text-gray-600 mb-3 flex-grow">Sets out terms and agreements for an engaged couple.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="personal/parent-adult-child-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Parent-Adult Child Agreement</h3><p class="text-gray-600 mb-3 flex-grow">Formalizes arrangements or loans between parents and their adult children.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="personal/personal-loan-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Personal Loan Agreement</h3><p class="text-gray-600 mb-3 flex-grow">A simple, clear contract for lending money between individuals.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <!-- Automated Wizard -->
+            <a href="assessment.html" class="option-card p-8 rounded-xl text-center">
+                <i class="fas fa-magic text-5xl text-blue-600 mb-4"></i>
+                <h4 class="text-2xl font-bold text-gray-900 mb-2">Guided Wizard</h4>
+                <p class="text-gray-600">Answer a few questions to get a personalized list of recommended templates.</p>
+            </a>
+            <!-- Manual Search -->
+            <div class="option-card p-8 rounded-xl text-center">
+                <i class="fas fa-search text-5xl text-blue-600 mb-4"></i>
+                <h4 class="text-2xl font-bold text-gray-900 mb-2">Manual Search</h4>
+                <p class="text-gray-600 mb-4">Know what you're looking for? Type it below.</p>
+                <input type="search" id="search-input" placeholder="e.g., 'Lease Agreement'" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
             </div>
-        </section>
+            <!-- Featured Form -->
+            <div id="featured-form-card" class="option-card p-8 rounded-xl text-center flex flex-col justify-center">
+                <!-- Featured form will be loaded here -->
+            </div>
+        </div>
 
-        <!-- Business & Strategic Documents -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-blue-800 mb-4 border-b-2 border-blue-200 pb-2">Business & Strategic Documents</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <a href="business-documents/business-plan.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Business Plan</h3><p class="text-gray-600 mb-3 flex-grow">Comprehensive template for business planning and strategy.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="business-documents/company-policy.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Company Policy</h3><p class="text-gray-600 mb-3 flex-grow">A standard format for defining internal company policies.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="business-documents/employment-contract.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Employment Contract</h3><p class="text-gray-600 mb-3 flex-grow">A formal agreement outlining the terms of employment.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="strategic/consulting-proposal.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Consulting Proposal</h3><p class="text-gray-600 mb-3 flex-grow">Professional proposal for offering consulting services.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="strategic/jv-partnership-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">JV & Partnership Agreement</h3><p class="text-gray-600 mb-3 flex-grow">Template for establishing joint ventures or business partnerships.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="strategic/padp-template.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Personal/Professional Development Plan</h3><p class="text-gray-600 mb-3 flex-grow">Structure your goals and development action plans.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="strategic/role-profile-charter.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Role Profile & Charter</h3><p class="text-gray-600 mb-3 flex-grow">Clearly define roles, responsibilities, and authorities.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
+        <!-- Search Results & Full Catalogue -->
+        <div id="catalogue-container">
+            <h2 class="text-3xl font-bold text-blue-800 mb-6 text-center" id="catalogue-title">Complete Template Library</h2>
+            <div id="form-catalogue" class="space-y-4">
+                <!-- Catalogue will be populated by script -->
+                <div class="text-center text-gray-500 p-10">
+                    <i class="fas fa-spinner fa-spin text-3xl"></i>
+                    <p class="mt-2">Loading Templates...</p>
+                </div>
             </div>
-        </section>
-        
-        <!-- Property Agreements -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-blue-800 mb-4 border-b-2 border-blue-200 pb-2">Property Agreements</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <a href="property/proof-of-residence.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Proof of Residence</h3><p class="text-gray-600 mb-3 flex-grow">A declaration to confirm an individual's residential address.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="property/rental-agreement-family.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Family Rental Agreement</h3><p class="text-gray-600 mb-3 flex-grow">A lease agreement tailored for renting property to a family member.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="property/standard-residential-lease.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Standard Residential Lease</h3><p class="text-gray-600 mb-3 flex-grow">A standard lease agreement for residential properties.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="property/sublet-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Sublet Agreement</h3><p class="text-gray-600 mb-3 flex-grow">Contract for a tenant to re-rent their property to another individual.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-            </div>
-        </section>
-
-        <!-- Governance & Family Office -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-blue-800 mb-4 border-b-2 border-blue-200 pb-2">Governance & Family Office</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <a href="governance/dna-policy-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">DNA Policy Agreement</h3><p class="text-gray-600 mb-3 flex-grow">Policy framework for handling genetic data and family lineage.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="governance/family-shareholders-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Family Shareholders Agreement</h3><p class="text-gray-600 mb-3 flex-grow">Governs the relationship between shareholders in a family business.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="governance/trust-deed-summary.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Trust Deed Summary</h3><p class="text-gray-600 mb-3 flex-grow">A simplified summary of the key terms of a trust deed.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                 <a href="lifesync/family-constitution.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Family Constitution</h3><p class="text-gray-600 mb-3 flex-grow">A foundational document outlining a family's values, vision, and governance.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-            </div>
-        </section>
-
-        <!-- LifeSync & Household -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-blue-800 mb-4 border-b-2 border-blue-200 pb-2">LifeSync & Household Management</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <a href="lifesync/chore-reward-contract.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Chore & Reward Contract</h3><p class="text-gray-600 mb-3 flex-grow">A fun agreement to manage chores and rewards for children.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="lifesync/tech-time-agreement.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Tech Time Agreement</h3><p class="text-gray-600 mb-3 flex-grow">Sets rules and boundaries for technology use within the family.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-            </div>
-        </section>
-        
-        <!-- Academic & Research -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-blue-800 mb-4 border-b-2 border-blue-200 pb-2">Academic & Research</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <a href="academic-documents/grant-proposal-template.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Grant Proposal</h3><p class="text-gray-600 mb-3 flex-grow">A structured template for applying for grants and funding.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-                <a href="academic-documents/research-proposal.html" class="bg-white p-6 rounded-lg shadow card-hover flex flex-col"><h3 class="font-semibold text-lg text-blue-700 mb-2">Research Proposal</h3><p class="text-gray-600 mb-3 flex-grow">Outline your research objectives, methodology, and expected outcomes.</p><span class="mt-auto text-blue-600 font-medium">Open Template</span></a>
-            </div>
-        </section>
-
+        </div>
     </div>
+
+    <script type="module">
+        import { formsDatabase, formCategories } from './forms-database.js';
+
+        const searchInput = document.getElementById('search-input');
+        const catalogueContainer = document.getElementById('form-catalogue');
+        const catalogueTitle = document.getElementById('catalogue-title');
+        const featuredFormCard = document.getElementById('featured-form-card');
+
+        // --- FEATURED FORM LOGIC ---
+        function renderFeaturedForm() {
+            const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+            const featuredFormsPool = formsDatabase.filter(f => f.source !== 'DocuHelp'); // Feature external forms
+            if (featuredFormsPool.length === 0) return;
+
+            let featuredData = JSON.parse(localStorage.getItem('featuredDocuhelpForm')) || {};
+            const now = new Date().getTime();
+
+            if (!featuredData.id || (now - featuredData.timestamp > TWO_HOURS_MS)) {
+                const randomIndex = Math.floor(Math.random() * featuredFormsPool.length);
+                const newFeaturedForm = featuredFormsPool[randomIndex];
+                featuredData = { id: newFeaturedForm.id, timestamp: now };
+                localStorage.setItem('featuredDocuhelpForm', JSON.stringify(featuredData));
+            }
+            
+            const featuredForm = formsDatabase.find(f => f.id === featuredData.id) || featuredFormsPool[0];
+
+            featuredFormCard.innerHTML = `
+                <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
+                <h4 class="text-2xl font-bold text-gray-900 mb-2">Featured Form</h4>
+                <p class="text-gray-600 mb-4 font-semibold">${featuredForm.title}</p>
+                <a href="${featuredForm.url}" target="_blank" class="mt-auto inline-block bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors">
+                    View on ${featuredForm.source}
+                </a>`;
+        }
+
+
+        // --- SEARCH & CATALOGUE LOGIC ---
+        function renderCatalogue(filter = '') {
+            const searchTerm = filter.toLowerCase().trim();
+            const filteredData = searchTerm ? formsDatabase.filter(form =>
+                form.title.toLowerCase().includes(searchTerm) ||
+                form.description.toLowerCase().includes(searchTerm) ||
+                form.category.toLowerCase().includes(searchTerm)
+            ) : formsDatabase;
+
+            if (filteredData.length === 0) {
+                catalogueContainer.innerHTML = `<p class="text-center text-gray-600 py-8">No templates found for "${filter}". Please try another search term.</p>`;
+                return;
+            }
+
+            catalogueTitle.textContent = searchTerm ? `Search Results for "${filter}"` : 'Complete Template Library';
+
+            const groupedByCategory = {};
+            for (const id in formCategories) {
+                groupedByCategory[id] = { ...formCategories[id], forms: [] };
+            }
+
+            filteredData.forEach(form => {
+                if (groupedByCategory[form.category]) {
+                    groupedByCategory[form.category].forms.push(form);
+                }
+            });
+
+            catalogueContainer.innerHTML = Object.values(groupedByCategory).map(category => {
+                if (category.forms.length === 0) return '';
+                return `
+                <div class="accordion-item bg-white rounded-lg shadow-sm">
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left p-5">
+                        <div class="flex items-center">
+                            <i class="fas ${category.icon} text-2xl text-blue-600 mr-4 w-8 text-center"></i>
+                            <span class="text-xl font-bold text-gray-800">${category.name}</span>
+                        </div>
+                        <i class="fas fa-chevron-down accordion-icon transition-transform text-gray-500"></i>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="p-5 border-t border-gray-200">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                ${category.forms.map(form => `
+                                    <a href="${form.url}" target="_blank" class="block p-4 rounded-md bg-gray-50 hover:bg-gray-100 border border-gray-200 transition-colors">
+                                        <h5 class="font-semibold text-gray-800">${form.title}</h5>
+                                        <p class="text-sm text-gray-500 mt-1">${form.description}</p>
+                                        <span class="text-xs font-semibold text-blue-700 mt-2 inline-block">Source: ${form.source}</span>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            
+            catalogueContainer.querySelectorAll('.accordion-toggle').forEach(button => {
+                button.addEventListener('click', () => {
+                    const item = button.closest('.accordion-item');
+                    item.classList.toggle('active');
+                });
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => renderCatalogue(e.target.value));
+
+        // Initial render
+        renderFeaturedForm();
+        renderCatalogue();
+    </script>
 </body>
 </html>
