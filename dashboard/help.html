@@ -1,43 +1,73 @@
+<!-- File: frontend/public/dashboard/help.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <title>Help | DocuHelp Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <script src="../assets/js/main.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Help | DocuHelp</title>
+  <link rel="stylesheet" href="../styles/globals.css">
+  <link rel="stylesheet" href="../css/themes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="../js/theme-manager.js"></script>
 </head>
-<body>
-  <div id="header"></div>
-  <script>
-    fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);
-  </script>
-  <main class="max-w-3xl mx-auto py-12 px-4">
-    <h1 class="text-3xl font-bold text-blue-700 mb-6">Help & FAQ</h1>
-    <div class="bg-white rounded-lg shadow p-6 space-y-4">
-      <h2 class="font-semibold text-lg">Frequently Asked Questions</h2>
-      <div>
-        <h3 class="font-semibold">How do I create a new document?</h3>
-        <p>Go to the Templates section, select a template, and start editing. You can save or download your document.</p>
-      </div>
-      <div>
-        <h3 class="font-semibold">How do I upgrade my account?</h3>
-        <p>From your Profile or Settings, choose "Upgrade" and follow the subscription instructions.</p>
-      </div>
-      <div>
-        <h3 class="font-semibold">How secure is my data?</h3>
-        <p>All documents are stored securely and encrypted for subscribed users. See our <a href="../privacy.html" class="text-blue-600 underline">Privacy Policy</a> for details.</p>
-      </div>
-      <div>
-        <h3 class="font-semibold">Where can I get more help?</h3>
-        <p>Contact support via the <a href="support.html" class="text-blue-600 underline">Support page</a> or email us directly.</p>
-      </div>
+<body class="bg-gray-50">
+  <!-- React Component: DashboardHeader -->
+  <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <svg class="text-blue-600 h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+        <path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/>
+        <rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/>
+      </svg>
+      <span class="text-xl font-bold text-blue-700">Help & Support</span>
     </div>
+    <nav class="flex gap-4">
+      <a href="index.html" class="text-blue-600 font-semibold">Dashboard</a>
+      <a href="profile.html" class="text-gray-600 hover:text-blue-600">Profile</a>
+      <a href="settings.html" class="text-gray-600 hover:text-blue-600">Settings</a>
+      <a href="activity.html" class="text-gray-600 hover:text-blue-600">Activity</a>
+      <a href="notifications.html" class="text-gray-600 hover:text-blue-600">Notifications</a>
+      <button id="theme-toggle" class="ml-4 text-blue-600 bg-blue-100 px-2 py-1 rounded hover:bg-blue-200" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="ml-2 text-blue-600 border border-blue-600 px-2 py-1 rounded hover:bg-blue-700 hover:text-white">Sign Out</button>
+    </nav>
+  </header>
+  <main class="max-w-3xl mx-auto py-8 px-4">
+    <!-- React Component: HelpContent -->
+    <section class="bg-white rounded-lg shadow p-6" id="help-content">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">How can we help you?</h2>
+      <ul class="space-y-4">
+        <li>
+          <span class="font-semibold">Getting Started:</span>
+          <a href="../../docs/user-guide/getting-started.md" class="text-blue-600 hover:underline">Read the guide</a>
+        </li>
+        <li>
+          <span class="font-semibold">Document Management:</span>
+          <a href="../../docs/user-guide/document-management.md" class="text-blue-600 hover:underline">Learn more</a>
+        </li>
+        <li>
+          <span class="font-semibold">Collaboration:</span>
+          <a href="../../docs/user-guide/collaboration.md" class="text-blue-600 hover:underline">How to collaborate</a>
+        </li>
+        <li>
+          <span class="font-semibold">Security & Compliance:</span>
+          <a href="../../docs/compliance/popia-compliance.md" class="text-blue-600 hover:underline">POPIA Compliance</a>
+        </li>
+      </ul>
+      <div class="mt-6">
+        <h3 class="font-semibold text-gray-900 mb-2">Need more help?</h3>
+        <p class="text-gray-700 mb-2">Contact our support team:</p>
+        <a href="mailto:docuhelp@salatiso.com" class="text-blue-600 hover:underline">docuhelp@salatiso.com</a>
+      </div>
+    </section>
   </main>
-  <div id="footer"></div>
+  <footer class="text-center py-6 text-gray-400 text-xs">
+    &copy; 2025 DocuHelp. Part of the Sazi Ecosystem.
+  </footer>
   <script>
-    fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      window.docuHelpTheme.toggleTheme();
+    });
   </script>
 </body>
 </html>

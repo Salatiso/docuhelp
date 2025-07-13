@@ -1,3 +1,4 @@
+<!-- File: frontend/public/dashboard/profile.html -->
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -8,9 +9,9 @@
   <link rel="stylesheet" href="../css/themes.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="../js/theme-manager.js"></script>
-  <script type="module" src="../js/firebase-config.js"></script>
 </head>
 <body class="bg-gray-50">
+  <!-- React Component: DashboardHeader -->
   <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
     <div class="flex items-center gap-3">
       <svg class="text-blue-600 h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
@@ -25,43 +26,45 @@
       <button id="theme-toggle" class="ml-4 text-blue-600 bg-blue-100 px-2 py-1 rounded hover:bg-blue-200" aria-label="Toggle theme">
         <i class="fas fa-moon"></i>
       </button>
-      <button onclick="window.docuHelpAuth.signOut()" class="ml-2 text-blue-600 border border-blue-600 px-2 py-1 rounded hover:bg-blue-700 hover:text-white">Sign Out</button>
+      <button class="ml-2 text-blue-600 border border-blue-600 px-2 py-1 rounded hover:bg-blue-700 hover:text-white">Sign Out</button>
     </nav>
   </header>
   <main class="max-w-3xl mx-auto py-8 px-4">
-    <section class="bg-white rounded-lg shadow p-6 mb-8">
+    <!-- React Component: ProfileCard -->
+    <section class="bg-white rounded-lg shadow p-6 mb-8" id="profile-card">
       <div class="flex items-center gap-4 mb-4">
         <img src="../assets/images/avatar-default.png" alt="Profile picture" class="h-16 w-16 rounded-full border border-gray-200">
         <div>
-          <h2 class="text-2xl font-bold text-gray-900" id="profile-name">User Name</h2>
-          <p class="text-gray-600" id="profile-email">user@email.com</p>
+          <h2 class="text-2xl font-bold text-gray-900" id="profile-name">[User Name]</h2>
+          <p class="text-gray-600" id="profile-email">[user@email.com]</p>
         </div>
       </div>
       <form class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-          <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" value="User Name">
+          <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" value="[User Name]">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-          <input type="email" class="w-full border border-gray-300 rounded px-3 py-2" value="user@email.com" disabled>
+          <input type="email" class="w-full border border-gray-300 rounded px-3 py-2" value="[user@email.com]" disabled>
         </div>
         <div>
           <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 font-semibold">Update Profile</button>
         </div>
       </form>
     </section>
-    <section class="bg-blue-50 rounded-lg p-6 shadow">
+    <!-- React Component: LifeCVSection -->
+    <section class="bg-blue-50 rounded-lg p-6 shadow" id="lifecv-section">
       <h3 class="font-semibold text-blue-700 mb-2">Your Sazi LifeCV</h3>
       <p class="text-gray-700 mb-3">Your DocuHelp activities contribute to your universal LifeCV. Documents you create, templates you use, and skills you develop are automatically tracked and verified.</p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div class="bg-white p-4 rounded border">
           <h4 class="font-medium text-gray-900">Portfolio Contributions</h4>
-          <p class="text-sm text-gray-600">Documents created: <span class="font-semibold">15</span></p>
+          <p class="text-sm text-gray-600">Documents created: <span class="font-semibold">[15]</span></p>
         </div>
         <div class="bg-white p-4 rounded border">
           <h4 class="font-medium text-gray-900">Skills Acquired</h4>
-          <p class="text-sm text-gray-600">Templates mastered: <span class="font-semibold">8</span></p>
+          <p class="text-sm text-gray-600">Templates mastered: <span class="font-semibold">[8]</span></p>
         </div>
       </div>
       <a href="https://hub.sazi.life/cv/{userId}" target="_blank" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
@@ -77,9 +80,6 @@
     document.getElementById('theme-toggle').addEventListener('click', () => {
       window.docuHelpTheme.toggleTheme();
     });
-    // Dummy data for now
-    document.getElementById('profile-name').textContent = "Nkosinathi M.";
-    document.getElementById('profile-email').textContent = "nkosi@docuhelp.com";
   </script>
 </body>
 </html>

@@ -1,62 +1,71 @@
+<!-- File: frontend/public/dashboard/activity.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <title>Activity | DocuHelp Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <script src="../assets/js/main.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Activity | DocuHelp</title>
+  <link rel="stylesheet" href="../styles/globals.css">
+  <link rel="stylesheet" href="../css/themes.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="../js/theme-manager.js"></script>
 </head>
-<body>
-  <div id="header"></div>
-  <script>
-    fetch('../components/header.html').then(r=>r.text()).then(t=>document.getElementById('header').innerHTML=t);
-  </script>
-  <main class="max-w-3xl mx-auto py-12 px-4">
-    <h1 class="text-3xl font-bold text-blue-700 mb-6">Recent Activity</h1>
-    <div class="bg-white rounded-lg shadow p-6">
-      <table class="w-full text-left">
-        <thead>
-          <tr>
-            <th class="py-2 px-3 border-b font-semibold">Date/Time</th>
-            <th class="py-2 px-3 border-b font-semibold">Action</th>
-            <th class="py-2 px-3 border-b font-semibold">Document</th>
-            <th class="py-2 px-3 border-b font-semibold">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="py-2 px-3 border-b">2025-07-11 09:30</td>
-            <td class="py-2 px-3 border-b">Created</td>
-            <td class="py-2 px-3 border-b">Employment Contract</td>
-            <td class="py-2 px-3 border-b text-green-600">Success</td>
-          </tr>
-          <tr>
-            <td class="py-2 px-3 border-b">2025-07-10 15:12</td>
-            <td class="py-2 px-3 border-b">Downloaded</td>
-            <td class="py-2 px-3 border-b">Company Policy</td>
-            <td class="py-2 px-3 border-b text-green-600">Success</td>
-          </tr>
-          <tr>
-            <td class="py-2 px-3 border-b">2025-07-09 18:44</td>
-            <td class="py-2 px-3 border-b">Shared</td>
-            <td class="py-2 px-3 border-b">Business Letter</td>
-            <td class="py-2 px-3 border-b text-yellow-600">Pending</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="mt-6 text-gray-500 text-sm">
-        More detailed activity logs and filters coming soon.
-      </div>
-      <div class="mt-6">
-        <button class="btn btn-outline" onclick="window.location.href='index.html'">Back to Dashboard</button>
-      </div>
+<body class="bg-gray-50">
+  <!-- React Component: DashboardHeader -->
+  <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <svg class="text-blue-600 h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="currentColor">
+        <path d="M15 25 L35 25 L40 30 L85 30 L85 75 L15 75 Z" fill="#0540F2" stroke="#2563EB" stroke-width="1"/>
+        <rect x="25" y="40" width="45" height="28" fill="#3B82F6" stroke="#1D4ED8" stroke-width="1" rx="2"/>
+      </svg>
+      <span class="text-xl font-bold text-blue-700">Activity</span>
     </div>
+    <nav class="flex gap-4">
+      <a href="index.html" class="text-blue-600 font-semibold">Dashboard</a>
+      <a href="profile.html" class="text-gray-600 hover:text-blue-600">Profile</a>
+      <a href="settings.html" class="text-gray-600 hover:text-blue-600">Settings</a>
+      <button id="theme-toggle" class="ml-4 text-blue-600 bg-blue-100 px-2 py-1 rounded hover:bg-blue-200" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="ml-2 text-blue-600 border border-blue-600 px-2 py-1 rounded hover:bg-blue-700 hover:text-white">Sign Out</button>
+    </nav>
+  </header>
+  <main class="max-w-3xl mx-auto py-8 px-4">
+    <!-- React Component: ActivityTimeline -->
+    <section class="bg-white rounded-lg shadow p-6" id="activity-timeline">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Recent Activity</h2>
+      <ul class="space-y-4">
+        <li class="flex items-start gap-3">
+          <span class="text-blue-600 mt-1"><i class="fas fa-file-alt"></i></span>
+          <div>
+            <span class="font-semibold">Created</span> Employment Contract.docx
+            <div class="text-xs text-gray-500">2 days ago</div>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-green-600 mt-1"><i class="fas fa-file-pdf"></i></span>
+          <div>
+            <span class="font-semibold">Converted</span> Payslip_June2025.pdf to PDF
+            <div class="text-xs text-gray-500">5 days ago</div>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-purple-600 mt-1"><i class="fas fa-signature"></i></span>
+          <div>
+            <span class="font-semibold">Signed</span> NDA_Agreement.pdf
+            <div class="text-xs text-gray-500">1 week ago</div>
+          </div>
+        </li>
+      </ul>
+    </section>
   </main>
-  <div id="footer"></div>
+  <footer class="text-center py-6 text-gray-400 text-xs">
+    &copy; 2025 DocuHelp. Part of the Sazi Ecosystem.
+  </footer>
   <script>
-    fetch('../components/footer.html').then(r=>r.text()).then(t=>document.getElementById('footer').innerHTML=t);
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      window.docuHelpTheme.toggleTheme();
+    });
   </script>
 </body>
 </html>
